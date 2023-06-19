@@ -1,12 +1,28 @@
 import { createSlice } from "@reduxjs/toolkit";
 import type { PayloadAction } from "@reduxjs/toolkit";
 
-export interface BoardState {
+export interface Task {
 	title: string;
+	description: string;
+	subtasks: Task[];
+	status: Column;
 }
 
-const initialState: BoardState = {
+export interface Column {
+	title: string;
+	color: string;
+}
+
+export interface Board {
+	title: string;
+	columns: Column[];
+	tasks: Task[];
+}
+
+const initialState: Board = {
 	title: "First board",
+	columns: [],
+	tasks: [],
 };
 
 export const boardSlice = createSlice({
