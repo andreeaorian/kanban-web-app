@@ -1,2 +1,15 @@
+@import "../../assets/variables.scss";
+
 .board {
+	width: 80%;
+}
+
+.board.dark {
+	background-color: $dark_background;
+	color: $white;
+}
+
+.board.light {
+	background-color: $light_background;
+	color: $gray;
 }

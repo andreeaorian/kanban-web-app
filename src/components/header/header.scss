@@ -1,4 +1,34 @@
+@import "../../assets/variables.scss";
+
 .header {
 	width: 100%;
-	height: 4rem;
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	padding: 0.5rem 1rem;
+	border-bottom: 1px solid;
+
+	.header-board-title {
+		margin: 0.5rem;
+	}
+
+	.header-new-task {
+		background-color: $purplish_blue;
+		border-radius: 1rem;
+		border: 0.1rem solid $purplish_blue;
+		height: 1.5rem;
+		color: $white;
+	}
+}
+
+.header.dark {
+	background-color: $dark_gray;
+	border-color: $gray;
+	color: $white;
+}
+
+.header.light {
+	background-color: $white;
+	border-color: $blueish_gray;
+	color: $black;
 }

@@ -1,10 +1,9 @@
 import "./App.scss";
-import { Sidebar, Header, Board } from "./components";
+import { Sidebar, Board } from "./components";
 
 function App() {
 	return (
 		<div className="App">
-			<Header />
 			<Sidebar />
 			<Board />
 		</div>

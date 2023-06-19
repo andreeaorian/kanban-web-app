@@ -1,3 +1,19 @@
+@import "../../assets/variables.scss";
+
 .sidebar {
-	width: 30%;
+	width: 20%;
+	height: 100vh;
+	border-right: 1px solid;
+}
+
+.sidebar.dark {
+	background-color: $dark_gray;
+	border-color: $gray;
+	color: $white;
+}
+
+.sidebar.light {
+	background-color: $white;
+	border-color: $blueish_gray;
+	color: $gray;
 }
