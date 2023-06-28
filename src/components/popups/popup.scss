@@ -1,0 +1,43 @@
+@import "../../assets/variables.scss";
+
+.popup-box {
+	position: fixed;
+	width: 100%;
+	height: 100vh;
+	top: 0;
+	left: 0;
+
+	.box {
+		position: relative;
+		width: 50%;
+		margin: 0 auto;
+		height: auto;
+		max-height: 70vh;
+		margin-top: calc(100vh - 85vh);
+		border-radius: 0.25rem;
+		padding: 0.25rem;
+		overflow: auto;
+
+		.close {
+			float: right;
+
+			&:hover {
+				cursor: pointer;
+			}
+		}
+
+		.box-content {
+			padding: 1rem;
+		}
+	}
+
+	.box.dark {
+		background-color: $dark_gray;
+		color: $white;
+	}
+
+	.box.light {
+		background-color: $white;
+		color: $gray;
+	}
+}
