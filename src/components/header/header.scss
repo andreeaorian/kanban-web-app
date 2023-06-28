@@ -32,3 +32,15 @@
 	border-color: $blueish_gray;
 	color: $black;
 }
+
+@media screen and (min-width: 1024px) {
+	//Desktop
+}
+
+@media screen and (min-width: 768px) and (max-width: 1023px) {
+	//Tablet
+}
+
+@media screen and (max-width: 767px) {
+	//Mobile
+}
