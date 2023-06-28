@@ -1,6 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
 import type { PayloadAction } from "@reduxjs/toolkit";
-import { Board } from "./boardReducer";
+import { Board } from "../models";
 
 export interface App {
 	isDarkTheme: boolean;
