@@ -1,5 +1,5 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faBars } from "@fortawesome/free-solid-svg-icons";
+import { faBars, faTableList } from "@fortawesome/free-solid-svg-icons";
 import type { RootState } from "../../redux/store";
 import { useSelector } from "react-redux";
 import SidebarBoardCard from "./components/sidebar-board";
@@ -9,6 +9,10 @@ import "./sidebar.scss";
 export default function Sidebar() {
 	const isDarkTheme = useSelector((state: RootState) => state.app.isDarkTheme);
 	const boards = useSelector((state: RootState) => state.app.boards);
+
+	const addNewBoad = () => {
+		console.log("new");
+	};
 
 	return (
 		<div className={`sidebar ${isDarkTheme ? "dark" : "light"}`}>
@@ -21,6 +25,12 @@ export default function Sidebar() {
 				{boards.map((board) => {
 					return <SidebarBoardCard boardName={board.title} key={board.title} />;
 				})}
+				<div
+					className="sidebar-board-card sidebar-new-board"
+					onClick={addNewBoad}>
+					<FontAwesomeIcon icon={faTableList} flip="both" size="lg" />
+					<span>+ Create New Board</span>
+				</div>
 			</div>
 		</div>
 	);

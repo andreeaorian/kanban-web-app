@@ -24,23 +24,25 @@
 	.sidebar-boards {
 		display: flex;
 		flex-direction: column;
-		justify-content: center;
-		align-items: center;
 
 		.sidebar-boards-all {
 			text-transform: uppercase;
 			font-weight: 500;
 			padding-bottom: 1rem;
+			padding-left: 2.5rem;
 		}
 
 		.sidebar-board-card {
 			display: flex;
 			justify-content: left;
 			align-items: center;
-			width: 75%;
+			width: 90%;
 			gap: 0.8rem;
 			padding: 0.5rem 0;
 			font-weight: 600;
+			margin-right: 2rem;
+			padding-left: 2.5rem;
+			padding-right: 1rem;
 		}
 
 		.sidebar-board-card.selected {
@@ -49,6 +51,15 @@
 			border-bottom-right-radius: 1.5rem;
 			border-top-right-radius: 1.5rem;
 			color: $white;
+		}
+
+		.sidebar-new-board {
+			color: $purplish_blue;
+
+			&:hover {
+				color: $white;
+				cursor: pointer;
+			}
 		}
 	}
 }
