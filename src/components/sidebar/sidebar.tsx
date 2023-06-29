@@ -13,6 +13,7 @@ import PopupWrapper from "../popups/popup-wrapper";
 import NewBoardPopup from "../popups/newBoard/new-board-popup";
 import { resetBoard } from "../../redux/boardReducer";
 import { changeSidebarVisibility } from "../../redux/appReducer";
+import ThemeChanger from "./components/theme-changer";
 
 import "./sidebar.scss";
 
@@ -60,11 +61,14 @@ export default function Sidebar() {
 						<span>+ Create Board</span>
 					</div>
 				</div>
-				<div
-					className="sidebar-hide-button"
-					onClick={() => dispatch(changeSidebarVisibility())}>
-					<FontAwesomeIcon icon={faEyeSlash} />
-					<span>Hide Sidebar</span>
+				<div className="sidebar-bottom">
+					<ThemeChanger />
+					<div
+						className="sidebar-hide-button"
+						onClick={() => dispatch(changeSidebarVisibility())}>
+						<FontAwesomeIcon icon={faEyeSlash} />
+						<span>Hide Sidebar</span>
+					</div>
 				</div>
 			</div>
 			<PopupWrapper

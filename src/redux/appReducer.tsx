@@ -9,7 +9,7 @@ export interface App {
 }
 
 const initialState: App = {
-	isDarkTheme: false,
+	isDarkTheme: true,
 	showSidebar: true,
 	boards: [
 		{ title: "First board", columns: [], tasks: [], isSelected: true },
@@ -26,8 +26,8 @@ export const appSlice = createSlice({
 	name: "board",
 	initialState,
 	reducers: {
-		changeTheme: (state, action: PayloadAction<boolean>) => {
-			state.isDarkTheme = action.payload;
+		changeTheme: (state) => {
+			state.isDarkTheme = !state.isDarkTheme;
 		},
 		addBoard: (state, action: PayloadAction<Board>) => {
 			state.boards.push(action.payload);
