@@ -5,14 +5,18 @@
 	height: 100vh;
 }
 
-.board.dark {
-	background-color: $dark_background;
-	color: $white;
+.dark-theme {
+	.board {
+		background-color: $dark_background;
+		color: $white;
+	}
 }
 
-.board.light {
-	background-color: $light_background;
-	color: $gray;
+.light-theme {
+	.board {
+		background-color: $light_background;
+		color: $gray;
+	}
 }
 
 @media screen and (min-width: 1024px) {

@@ -10,7 +10,6 @@ import NewBoardPopup from "../popups/newBoard/new-board-popup";
 
 import "./sidebar.scss";
 export default function Sidebar() {
-	const isDarkTheme = useSelector((state: RootState) => state.app.isDarkTheme);
 	const boards = useSelector((state: RootState) => state.app.boards);
 	const [isNewBoardPopupVisible, setIsNewBoardPopupVisible] = useState(false);
 
@@ -24,7 +23,7 @@ export default function Sidebar() {
 
 	return (
 		<>
-			<div className={`sidebar ${isDarkTheme ? "dark" : "light"}`}>
+			<div className="sidebar">
 				<div className="sidebar-kanban">
 					<FontAwesomeIcon icon={faBars} flip="vertical" size="lg" />
 					<h2>Kanban</h2>

@@ -14,7 +14,6 @@
 		border-radius: 0.25rem;
 		padding: 0.25rem;
 		overflow: auto;
-		box-shadow: 0.125rem 0.125rem 0.25rem $black;
 
 		.close {
 			float: right;
@@ -28,15 +27,35 @@
 			padding: 1rem;
 		}
 	}
+}
 
-	.box.dark {
-		background-color: $dark_gray;
-		color: $white;
+.dark-theme {
+	.popup-box {
+		.box {
+			background-color: $dark_gray;
+			color: $white;
+			box-shadow: 0.125rem 0.125rem 0.25rem $black;
+		}
 	}
+}
 
-	.box.light {
-		background-color: $white;
-		color: $gray;
+.light-theme {
+	.popup-box {
+		.box {
+			background-color: $white;
+			color: $dark_gray;
+			box-shadow: 0.125rem 0.125rem 0.25rem $gray;
+
+			.close {
+				color: $black;
+			}
+
+			.box-content {
+				h2 {
+					color: $black;
+				}
+			}
+		}
 	}
 }
 

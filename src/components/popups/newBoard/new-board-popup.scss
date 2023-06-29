@@ -13,6 +13,7 @@
 		border-radius: 0.25rem;
 		color: $white;
 		padding: 0.25rem;
+		outline: none;
 	}
 }
 
@@ -27,7 +28,6 @@
 		height: 2rem;
 		display: flex;
 		gap: 1rem;
-		color: $white;
 
 		.status-details {
 			width: 100%;
@@ -79,7 +79,6 @@
 				padding: 0.25rem;
 				border: none;
 				outline: none;
-				color: $white;
 			}
 
 			input[type="color"] {
@@ -139,5 +138,71 @@
 		background-color: $purplish_blue;
 		border-color: $purplish_blue;
 		color: $white;
+	}
+}
+
+.dark-theme {
+	.board-name {
+		input {
+			color: $white;
+		}
+	}
+
+	.board-column-list {
+		.status-column {
+			color: $white;
+		}
+
+		.new-column {
+			.new-column-inputs {
+				input[type="text"] {
+					color: $white;
+				}
+			}
+		}
+	}
+
+	.board-buttons {
+		.new-column-button {
+			background-color: $blueish_gray;
+			color: $purplish_blue;
+			border-color: $blueish_gray;
+		}
+
+		.submit {
+			background-color: $purplish_blue;
+			border-color: $purplish_blue;
+			color: $white;
+		}
+	}
+}
+
+.light-theme {
+	.board-name {
+		input {
+			color: $black;
+		}
+	}
+
+	.board-column-list {
+		.status-column {
+			color: $black;
+
+			.status-icons {
+				color: $gray;
+			}
+		}
+
+		.new-column {
+			.new-column-inputs {
+				input[type="text"] {
+					color: $black;
+				}
+			}
+
+			svg {
+				color: $gray;
+			}
+		}
 	}
 }

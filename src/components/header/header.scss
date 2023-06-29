@@ -26,16 +26,20 @@
 	}
 }
 
-.header.dark {
-	background-color: $dark_gray;
-	border-color: $gray;
-	color: $white;
+.dark-theme {
+	.header {
+		background-color: $dark_gray;
+		border-color: $gray;
+		color: $white;
+	}
 }
 
-.header.light {
-	background-color: $white;
-	border-color: $blueish_gray;
-	color: $black;
+.light-theme {
+	.header {
+		background-color: $white;
+		border-color: $blueish_gray;
+		color: $black;
+	}
 }
 
 @media screen and (min-width: 1024px) {

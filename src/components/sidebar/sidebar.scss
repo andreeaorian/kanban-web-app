@@ -44,6 +44,10 @@
 			margin-right: 2rem;
 			padding-left: 2.5rem;
 			padding-right: 1rem;
+
+			&:hover {
+				cursor: pointer;
+			}
 		}
 
 		.sidebar-board-card.selected {
@@ -58,27 +62,50 @@
 			color: $purplish_blue;
 
 			&:hover {
-				color: $white;
 				cursor: pointer;
 			}
 		}
 	}
 }
 
-.sidebar.dark {
-	background-color: $dark_gray;
-	border-color: $gray;
-	color: $white;
+.dark-theme {
+	.sidebar {
+		background-color: $dark_gray;
+		border-color: $gray;
+		color: $white;
 
-	.sidebar-boards {
-		color: $gray;
+		.sidebar-boards {
+			color: $gray;
+
+			.sidebar-new-board {
+				&:hover {
+					color: $white;
+				}
+			}
+		}
 	}
 }
 
-.sidebar.light {
-	background-color: $white;
-	border-color: $blueish_gray;
-	color: $gray;
+.light-theme {
+	.sidebar {
+		background-color: $white;
+		border-color: $blueish_gray;
+		color: $gray;
+
+		.sidebar-kanban {
+			h2 {
+				color: $black;
+			}
+		}
+
+		.sidebar-boards {
+			.sidebar-new-board {
+				&:hover {
+					color: $black;
+				}
+			}
+		}
+	}
 }
 
 @media screen and (min-width: 1024px) {

@@ -1,8 +1,6 @@
 import React from "react";
-import { useSelector } from "react-redux";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faXmark } from "@fortawesome/free-solid-svg-icons";
-import type { RootState } from "../../redux/store";
 
 import "./popup.scss";
 
@@ -17,11 +15,9 @@ export default function PopupWrapper({
 	closePopup,
 	content,
 }: PopupProps) {
-	const isDarkTheme = useSelector((state: RootState) => state.app.isDarkTheme);
-
 	return isVisible ? (
 		<div className="popup-box">
-			<div className={`box  ${isDarkTheme ? "dark" : "light"}`}>
+			<div className="box">
 				<FontAwesomeIcon
 					className="close"
 					icon={faXmark}
