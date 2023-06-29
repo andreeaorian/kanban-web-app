@@ -5,4 +5,5 @@ export default interface Board {
 	title: string;
 	columns: Column[];
 	tasks: Task[];
+	isSelected: boolean;
 }

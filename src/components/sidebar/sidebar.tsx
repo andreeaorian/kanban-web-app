@@ -35,7 +35,11 @@ export default function Sidebar() {
 					</span>
 					{boards.map((board) => {
 						return (
-							<SidebarBoardCard boardName={board.title} key={board.title} />
+							<SidebarBoardCard
+								boardName={board.title}
+								key={board.title}
+								isSelected={board.isSelected}
+							/>
 						);
 					})}
 					<div

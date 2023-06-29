@@ -11,6 +11,7 @@ const initialState: Board = {
 		{ title: "DONE", color: "#FF0000" },
 	],
 	tasks: [],
+	isSelected: false,
 };
 
 export const boardSlice = createSlice({
