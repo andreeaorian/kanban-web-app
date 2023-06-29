@@ -16,7 +16,8 @@ export default function SidebarBoardCard({
 	return (
 		<div
 			className={`sidebar-board-card ${isSelected ? "selected" : ""}`}
-			onClick={() => dispatch(selectBoard(boardName))}>
+			onClick={() => dispatch(selectBoard(boardName))}
+			title={boardName}>
 			<FontAwesomeIcon icon={faTableList} flip="both" />
 			<span>{boardName}</span>
 		</div>

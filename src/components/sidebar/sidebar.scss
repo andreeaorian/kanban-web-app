@@ -48,6 +48,12 @@
 			&:hover {
 				cursor: pointer;
 			}
+
+			span {
+				white-space: nowrap;
+				overflow: hidden;
+				text-overflow: ellipsis;
+			}
 		}
 
 		.sidebar-board-card.selected {
