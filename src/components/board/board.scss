@@ -1,5 +1,10 @@
 @import "../../assets/variables.scss";
 
+.board {
+	flex: 1;
+	height: 100vh;
+}
+
 .board.dark {
 	background-color: $dark_background;
 	color: $white;
@@ -12,21 +17,12 @@
 
 @media screen and (min-width: 1024px) {
 	//Desktop
-	.board {
-		width: 80%;
-	}
 }
 
 @media screen and (min-width: 768px) and (max-width: 1023px) {
 	//Tablet
-	.board {
-		width: 100%;
-	}
 }
 
 @media screen and (max-width: 767px) {
 	//Mobile
-	.board {
-		width: 100%;
-	}
 }

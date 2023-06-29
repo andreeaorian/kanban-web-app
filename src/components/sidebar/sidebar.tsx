@@ -45,7 +45,7 @@ export default function Sidebar() {
 					<div
 						className="sidebar-board-card sidebar-new-board"
 						onClick={addNewBoad}>
-						<FontAwesomeIcon icon={faTableList} flip="both" size="lg" />
+						<FontAwesomeIcon icon={faTableList} flip="both" />
 						<span>+ Create New Board</span>
 					</div>
 				</div>

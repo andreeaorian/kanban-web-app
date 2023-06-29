@@ -13,11 +13,16 @@
 	}
 
 	.header-new-task {
+		display: flex;
+		gap: 0.25rem;
+		justify-content: center;
+		align-items: center;
 		background-color: $purplish_blue;
 		border-radius: 1rem;
 		border: 0.1rem solid $purplish_blue;
 		height: 1.5rem;
 		color: $white;
+		padding: 0.25rem;
 	}
 }
 
@@ -39,8 +44,39 @@
 
 @media screen and (min-width: 768px) and (max-width: 1023px) {
 	//Tablet
+	.header {
+		.header-board-title {
+			max-width: 15rem;
+			white-space: nowrap;
+			overflow: hidden;
+			text-overflow: ellipsis;
+		}
+	}
 }
 
 @media screen and (max-width: 767px) {
 	//Mobile
+	.header {
+		.header-board-title {
+			max-width: 15rem;
+			white-space: nowrap;
+			overflow: hidden;
+			text-overflow: ellipsis;
+			font-size: 1.25rem;
+		}
+
+		.header-new-task {
+			font-size: 0.75rem;
+		}
+	}
+}
+
+@media screen and (max-width: 485px) {
+	.header {
+		.header-new-task {
+			span {
+				display: none;
+			}
+		}
+	}
 }

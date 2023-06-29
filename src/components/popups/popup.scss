@@ -9,11 +9,8 @@
 
 	.box {
 		position: relative;
-		width: 30%;
 		margin: 0 auto;
 		height: auto;
-		max-height: calc(100vh - 3rem);
-		margin-top: calc(100vh - 85vh - 1.5rem);
 		border-radius: 0.25rem;
 		padding: 0.25rem;
 		overflow: auto;
@@ -40,5 +37,38 @@
 	.box.light {
 		background-color: $white;
 		color: $gray;
+	}
+}
+
+@media screen and (min-width: 1024px) {
+	//Desktop
+	.popup-box {
+		.box {
+			width: 30%;
+			max-height: calc(100vh - 3rem);
+			margin-top: calc(100vh - 85vh - 1.5rem);
+		}
+	}
+}
+
+@media screen and (min-width: 768px) and (max-width: 1023px) {
+	//Tablet
+	.popup-box {
+		.box {
+			width: 40%;
+			max-height: calc(100vh - 2rem);
+			margin-top: 1.5rem;
+		}
+	}
+}
+
+@media screen and (max-width: 767px) {
+	//Mobile
+	.popup-box {
+		.box {
+			width: 85%;
+			max-height: calc(100vh - 3rem);
+			margin-top: 1rem;
+		}
 	}
 }
