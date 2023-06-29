@@ -30,10 +30,15 @@ export const boardSlice = createSlice({
 		addColumn: (state, action: PayloadAction<Column>) => {
 			state.columns = [...state.columns, action.payload];
 		},
+		resetBoard: (state) => {
+			state.columns = initialState.columns;
+			state.title = initialState.title;
+		},
 	},
 });
 
 // Action creators are generated for each case reducer function
-export const { changeTitle, deleteColumn, addColumn } = boardSlice.actions;
+export const { changeTitle, deleteColumn, addColumn, resetBoard } =
+	boardSlice.actions;
 
 export default boardSlice.reducer;

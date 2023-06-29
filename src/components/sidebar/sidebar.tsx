@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faBars, faTableList } from "@fortawesome/free-solid-svg-icons";
 
@@ -7,11 +7,14 @@ import type { RootState } from "../../redux/store";
 import SidebarBoardCard from "./components/sidebar-board";
 import PopupWrapper from "../popups/popup-wrapper";
 import NewBoardPopup from "../popups/newBoard/new-board-popup";
+import { resetBoard } from "../../redux/boardReducer";
 
 import "./sidebar.scss";
+
 export default function Sidebar() {
 	const boards = useSelector((state: RootState) => state.app.boards);
 	const [isNewBoardPopupVisible, setIsNewBoardPopupVisible] = useState(false);
+	const dispatch = useDispatch();
 
 	const addNewBoad = () => {
 		setIsNewBoardPopupVisible(true);
@@ -19,6 +22,7 @@ export default function Sidebar() {
 
 	const handleClosePopup = () => {
 		setIsNewBoardPopupVisible(false);
+		dispatch(resetBoard());
 	};
 
 	return (
