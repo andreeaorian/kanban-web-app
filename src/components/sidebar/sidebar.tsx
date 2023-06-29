@@ -53,7 +53,7 @@ export default function Sidebar() {
 			<PopupWrapper
 				isVisible={isNewBoardPopupVisible}
 				closePopup={handleClosePopup}
-				content={<NewBoardPopup />}
+				content={<NewBoardPopup close={handleClosePopup} />}
 			/>
 		</>
 	);

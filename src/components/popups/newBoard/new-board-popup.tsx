@@ -4,11 +4,12 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCheck, faXmark } from "@fortawesome/free-solid-svg-icons";
 import type { RootState } from "../../../redux/store";
 import PopupStatusColumn from "./popup-status-column";
-import { addColumn } from "../../../redux/boardReducer";
+import { addColumn, changeTitle } from "../../../redux/boardReducer";
+import { addBoard } from "../../../redux/appReducer";
 
 import "./new-board-popup.scss";
 
-export default function NewBoardPopup() {
+export default function NewBoardPopup({ close }: { close: () => void }) {
 	const board = useSelector((state: RootState) => state.board);
 	const [isNewColumnInputVisible, setIsNewColumnInputVisible] = useState(false);
 	const [textInputValue, setTextInputValue] = useState<string>("");
@@ -24,6 +25,11 @@ export default function NewBoardPopup() {
 		setIsNewColumnInputVisible(false);
 	};
 
+	const saveBoard = () => {
+		dispatch(addBoard(board));
+		close();
+	};
+
 	return (
 		<>
 			<h2>Add new board</h2>
@@ -34,6 +40,7 @@ export default function NewBoardPopup() {
 						name="boardName"
 						id="boardName"
 						placeholder="e.g. First Board"
+						onChange={({ target }) => dispatch(changeTitle(target.value))}
 					/>
 				</div>
 				<div className="board-column-list">
@@ -81,7 +88,9 @@ export default function NewBoardPopup() {
 					disabled={isNewColumnInputVisible}>
 					Add new column
 				</button>
-				<button className="submit">Create board</button>
+				<button className="submit" onClick={saveBoard}>
+					Create board
+				</button>
 			</div>
 		</>
 	);
