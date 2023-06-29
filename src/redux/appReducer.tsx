@@ -4,11 +4,13 @@ import { Board } from "../models";
 
 export interface App {
 	isDarkTheme: boolean;
+	showSidebar: boolean;
 	boards: Board[];
 }
 
 const initialState: App = {
-	isDarkTheme: true,
+	isDarkTheme: false,
+	showSidebar: true,
 	boards: [
 		{ title: "First board", columns: [], tasks: [], isSelected: true },
 		{
@@ -42,10 +44,14 @@ export const appSlice = createSlice({
 
 			state.boards = allBoards;
 		},
+		changeSidebarVisibility: (state) => {
+			state.showSidebar = !state.showSidebar;
+		},
 	},
 });
 
 // Action creators are generated for each case reducer function
-export const { changeTheme, addBoard, selectBoard } = appSlice.actions;
+export const { changeTheme, addBoard, selectBoard, changeSidebarVisibility } =
+	appSlice.actions;
 
 export default appSlice.reducer;

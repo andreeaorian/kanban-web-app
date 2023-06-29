@@ -10,6 +10,15 @@
 
 	.header-board-title {
 		margin: 0.5rem;
+		padding: 0 0.5rem;
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		gap: 0.5rem;
+
+		svg {
+			color: $purplish_blue;
+		}
 	}
 
 	.header-new-task {
@@ -54,6 +63,11 @@
 			white-space: nowrap;
 			overflow: hidden;
 			text-overflow: ellipsis;
+
+			svg {
+				width: 1.125rem;
+				height: 1.125rem;
+			}
 		}
 	}
 }
@@ -67,6 +81,11 @@
 			overflow: hidden;
 			text-overflow: ellipsis;
 			font-size: 1.25rem;
+
+			svg {
+				width: 1.125rem;
+				height: 1.125rem;
+			}
 		}
 
 		.header-new-task {

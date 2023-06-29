@@ -5,6 +5,8 @@
 	min-width: 12rem;
 	height: 100vh;
 	border-right: 0.1rem solid;
+	display: flex;
+	flex-direction: column;
 
 	.sidebar-kanban {
 		padding: 0.5rem;
@@ -72,6 +74,17 @@
 			}
 		}
 	}
+
+	.sidebar-hide-button {
+		margin-top: auto;
+		display: flex;
+		align-items: center;
+		padding: 1.5rem;
+		gap: 0.5rem;
+		font-size: 0.75rem;
+		cursor: pointer;
+		color: $gray;
+	}
 }
 
 .dark-theme {
@@ -90,6 +103,10 @@
 			}
 		}
 	}
+}
+
+.sidebar.hidden {
+	display: none;
 }
 
 .light-theme {
