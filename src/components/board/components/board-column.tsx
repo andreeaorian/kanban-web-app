@@ -18,7 +18,7 @@ export default function BoardColumn({
 		<div className="board-column">
 			<div className="board-column-header">
 				<FontAwesomeIcon icon={faCircle} color={color} size="lg" />
-				<span>{columnName}</span>
+				<span>{`${columnName} (${tasks.length})`}</span>
 			</div>
 			<div className="board-column-content">
 				{tasks.map((task) => {
