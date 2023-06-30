@@ -1,6 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
 import type { PayloadAction } from "@reduxjs/toolkit";
-import { Board } from "../models";
+import { Board, SubTaskStatus } from "../models";
 
 export interface App {
 	isDarkTheme: boolean;
@@ -12,7 +12,35 @@ const initialState: App = {
 	isDarkTheme: true,
 	showSidebar: true,
 	boards: [
-		{ title: "First board", columns: [], tasks: [], isSelected: true },
+		{
+			title: "First board",
+			columns: [
+				{ title: "TO DO", color: "#FF0000" },
+				{ title: "DOING", color: "#FF0000" },
+				{ title: "DONE", color: "#FF0000" },
+			],
+			tasks: [
+				{
+					title: "This is the first task",
+					description: "Description of the first task",
+					status: "TO DO",
+					subtasks: [],
+				},
+				{
+					title:
+						"This is the second task with a very very very long task title ",
+					description: "Description of the second task",
+					status: "TO DO",
+					subtasks: [
+						{
+							title: "This is the first subtask",
+							status: SubTaskStatus.Todo,
+						},
+					],
+				},
+			],
+			isSelected: true,
+		},
 		{
 			title: "Second largest board",
 			columns: [],
