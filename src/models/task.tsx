@@ -3,7 +3,7 @@ export enum SubTaskStatus {
 	Done,
 }
 
-interface SubTask {
+export interface SubTask {
 	title: string;
 	status: SubTaskStatus;
 }
