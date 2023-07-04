@@ -30,7 +30,7 @@ export default function BoardColumn({
 								task.subtasks.filter((x) => x.status === SubTaskStatus.Done)
 									.length
 							}
-							key={task.title}
+							key={task.id}
 						/>
 					);
 				})}

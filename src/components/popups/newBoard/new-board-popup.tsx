@@ -6,6 +6,7 @@ import type { RootState } from "../../../redux/store";
 import PopupStatusColumn from "./popup-status-column";
 import { addColumn, changeTitle } from "../../../redux/boardReducer";
 import { addBoard } from "../../../redux/appReducer";
+import { generateId } from "../../../utils/id-generator";
 
 import "./new-board-popup.scss";
 
@@ -26,7 +27,8 @@ export default function NewBoardPopup({ close }: { close: () => void }) {
 	};
 
 	const saveBoard = () => {
-		dispatch(addBoard(board));
+		const boardId = generateId();
+		dispatch(addBoard({ ...board, id: boardId }));
 		close();
 	};
 

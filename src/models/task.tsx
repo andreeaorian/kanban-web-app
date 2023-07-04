@@ -9,8 +9,10 @@ interface SubTask {
 }
 
 export default interface Task {
+	id: string;
 	title: string;
 	description: string;
 	subtasks: SubTask[];
 	status: string;
+	boardId: string;
 }

@@ -49,7 +49,7 @@ export default function Sidebar() {
 						return (
 							<SidebarBoardCard
 								boardName={board.title}
-								key={board.title}
+								key={board.id}
 								isSelected={board.isSelected}
 							/>
 						);

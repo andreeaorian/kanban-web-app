@@ -13,6 +13,7 @@ const initialState: App = {
 	showSidebar: true,
 	boards: [
 		{
+			id: "2sD4f9jKpR",
 			title: "First board",
 			columns: [
 				{ title: "TO DO", color: "#FF0000" },
@@ -21,12 +22,16 @@ const initialState: App = {
 			],
 			tasks: [
 				{
+					id: "xYp1B4nLrJ",
+					boardId: "2sD4f9jKpR",
 					title: "This is the first task",
 					description: "Description of the first task",
 					status: "TO DO",
 					subtasks: [],
 				},
 				{
+					id: "wT5zA2mDyV",
+					boardId: "2sD4f9jKpR",
 					title:
 						"This is the second task with a very very very long task title ",
 					description: "Description of the second task",
@@ -42,6 +47,7 @@ const initialState: App = {
 			isSelected: true,
 		},
 		{
+			id: "kD7F3c8uZb",
 			title: "Second largest board",
 			columns: [],
 			tasks: [],

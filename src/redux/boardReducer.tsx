@@ -4,6 +4,7 @@ import type { PayloadAction } from "@reduxjs/toolkit";
 import { Board, Column } from "../models";
 
 const initialState: Board = {
+	id: "",
 	title: "",
 	columns: [
 		{ title: "TO DO", color: "#FF0000" },
@@ -33,6 +34,8 @@ export const boardSlice = createSlice({
 		resetBoard: (state) => {
 			state.columns = initialState.columns;
 			state.title = initialState.title;
+			state.id = initialState.id;
+			state.isSelected = initialState.isSelected;
 		},
 	},
 });
