@@ -1,7 +1,7 @@
 import { createSlice } from "@reduxjs/toolkit";
 import type { PayloadAction } from "@reduxjs/toolkit";
 
-import { Board, Column, Task } from "../models";
+import { Board, Column } from "../models";
 
 const initialState: Board = {
 	id: "",
@@ -34,10 +34,6 @@ export const boardSlice = createSlice({
 			state.columns = [...state.columns, action.payload];
 		},
 
-		addTask: (state, action: PayloadAction<Task>) => {
-			state.tasks = [...state.tasks, action.payload];
-		},
-
 		resetBoard: (state) => {
 			state.columns = initialState.columns;
 			state.title = initialState.title;
@@ -48,7 +44,7 @@ export const boardSlice = createSlice({
 });
 
 // Action creators are generated for each case reducer function
-export const { changeTitle, deleteColumn, addColumn, addTask, resetBoard } =
+export const { changeTitle, deleteColumn, addColumn, resetBoard } =
 	boardSlice.actions;
 
 export default boardSlice.reducer;

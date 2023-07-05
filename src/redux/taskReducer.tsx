@@ -41,7 +41,12 @@ export const taskSlice = createSlice({
 });
 
 // Action creators are generated for each case reducer function
-export const { changeTitle, deleteSubtask, addSubtask, resetTask } =
-	taskSlice.actions;
+export const {
+	changeTitle,
+	changeDescription,
+	deleteSubtask,
+	addSubtask,
+	resetTask,
+} = taskSlice.actions;
 
 export default taskSlice.reducer;

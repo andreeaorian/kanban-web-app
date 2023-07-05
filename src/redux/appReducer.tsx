@@ -1,6 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
 import type { PayloadAction } from "@reduxjs/toolkit";
-import { Board, SubTaskStatus } from "../models";
+import { Board, Task, SubTaskStatus } from "../models";
 
 export interface App {
 	isDarkTheme: boolean;
@@ -78,6 +78,16 @@ export const appSlice = createSlice({
 
 			state.boards = allBoards;
 		},
+		addTaskToBoard: (state, action: PayloadAction<Task>) => {
+			const allBoards = [...state.boards];
+			allBoards.forEach((board) => {
+				if (board.id === action.payload.boardId) {
+					board.tasks = board.tasks?.concat(action.payload);
+				}
+			});
+
+			state.boards = allBoards;
+		},
 		changeSidebarVisibility: (state) => {
 			state.showSidebar = !state.showSidebar;
 		},
@@ -85,7 +95,12 @@ export const appSlice = createSlice({
 });
 
 // Action creators are generated for each case reducer function
-export const { changeTheme, addBoard, selectBoard, changeSidebarVisibility } =
-	appSlice.actions;
+export const {
+	changeTheme,
+	addBoard,
+	selectBoard,
+	addTaskToBoard,
+	changeSidebarVisibility,
+} = appSlice.actions;
 
 export default appSlice.reducer;
