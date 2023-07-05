@@ -1,6 +1,11 @@
 import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { faXmark } from "@fortawesome/free-solid-svg-icons";
+import {
+	faXmark,
+	faCheck,
+	faTrash,
+	faPenToSquare,
+} from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { RootState } from "../../../redux/store";
 import {
@@ -8,6 +13,7 @@ import {
 	changeDescription,
 	addSubtask,
 	deleteSubtask,
+	resetTask,
 } from "../../../redux/taskReducer";
 import { addTaskToBoard } from "../../../redux/appReducer";
 import { SubTaskStatus } from "../../../models";
@@ -16,15 +22,16 @@ import { generateId } from "../../../utils/id-generator";
 import "./new-task-popup.scss";
 
 export default function NewTaskPopup({ close }: { close: () => void }) {
-	const [isNewSubtaskInputVisible, setIsNewSubtaskInputVisible] =
-		useState(false);
 	const newTask = useSelector((state: RootState) => state.task);
 	const selectedBoard = useSelector((state: RootState) =>
 		state.app.boards.find((x) => x.isSelected)
 	);
+	const [isNewSubtaskInputVisible, setIsNewSubtaskInputVisible] =
+		useState(false);
 	const [selectedStatus, setSelectedStatus] = useState(
 		selectedBoard?.columns[0].title
 	);
+	const [newSubtask, setNewSubtask] = useState("");
 	const dispatch = useDispatch();
 
 	const addNewSubtask = (e: React.FormEvent<HTMLButtonElement>) => {
@@ -32,9 +39,13 @@ export default function NewTaskPopup({ close }: { close: () => void }) {
 		setIsNewSubtaskInputVisible(true);
 	};
 
+	const saveSubtask = () => {
+		dispatch(addSubtask({ title: newSubtask, status: SubTaskStatus.Todo }));
+		setIsNewSubtaskInputVisible(false);
+	};
+
 	const saveTask = () => {
 		const taskId = generateId();
-		console.log(selectedBoard);
 		dispatch(
 			addTaskToBoard({
 				...newTask,
@@ -43,6 +54,7 @@ export default function NewTaskPopup({ close }: { close: () => void }) {
 				id: taskId,
 			})
 		);
+		dispatch(resetTask());
 		close();
 	};
 
@@ -72,20 +84,32 @@ export default function NewTaskPopup({ close }: { close: () => void }) {
 
 				<div className="task-subtasks">
 					<div>Subtasks</div>
+					{newTask.subtasks.length > 0 && (
+						<div className="subtasks-list">
+							{newTask.subtasks.map((s) => {
+								return (
+									<div className="subtask" key={s.title}>
+										<div className="subtask-title">{s.title}</div>
+										<div className="subtask-icons">
+											<FontAwesomeIcon icon={faPenToSquare} />
+											<FontAwesomeIcon
+												icon={faTrash}
+												onClick={() => dispatch(deleteSubtask(s.title))}
+											/>
+										</div>
+									</div>
+								);
+							})}
+						</div>
+					)}
 					{isNewSubtaskInputVisible && (
 						<div className="task-new-subtask">
 							<input
 								type="text"
 								placeholder="e.g. Make coffee"
-								onChange={({ target }) =>
-									dispatch(
-										addSubtask({
-											title: target.value,
-											status: SubTaskStatus.Todo,
-										})
-									)
-								}
+								onChange={({ target }) => setNewSubtask(target.value)}
 							/>
+							<FontAwesomeIcon icon={faCheck} size="lg" onClick={saveSubtask} />
 							<FontAwesomeIcon
 								icon={faXmark}
 								size="lg"
