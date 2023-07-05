@@ -35,10 +35,7 @@ export const boardSlice = createSlice({
 		},
 
 		resetBoard: (state) => {
-			state.columns = initialState.columns;
-			state.title = initialState.title;
-			state.id = initialState.id;
-			state.isSelected = initialState.isSelected;
+			state = { ...initialState };
 		},
 	},
 });
