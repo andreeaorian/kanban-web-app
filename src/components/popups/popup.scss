@@ -25,6 +25,24 @@
 
 		.box-content {
 			padding: 1rem;
+
+			.label-error {
+				display: flex;
+				justify-content: space-between;
+				align-items: center;
+
+				.error {
+					color: $red_error;
+					font-size: 0.75rem;
+					font-weight: 600;
+				}
+			}
+
+			input {
+				&.error {
+					border-color: $red_error;
+				}
+			}
 		}
 	}
 }
