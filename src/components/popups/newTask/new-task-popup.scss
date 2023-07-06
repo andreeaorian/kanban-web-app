@@ -71,19 +71,30 @@
 				}
 			}
 		}
-
-		.task-new-subtask {
-			display: flex;
-			gap: 0.5rem;
-			align-items: center;
-			padding-bottom: 0.5rem;
-
-			input {
-				width: 100%;
+		.task-new-subtask-with-errors {
+			.error {
+				color: $red_error;
+				font-size: 0.75rem;
+				font-weight: 600;
+				float: right;
+				padding-right: 3rem;
+				padding-bottom: 0.25rem;
 			}
 
-			svg {
-				cursor: pointer;
+			.task-new-subtask {
+				display: flex;
+				gap: 0.5rem;
+				align-items: center;
+				padding-bottom: 0.5rem;
+				width: 100%;
+
+				input {
+					width: 100%;
+				}
+
+				svg {
+					cursor: pointer;
+				}
 			}
 		}
 

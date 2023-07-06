@@ -18,6 +18,8 @@ import {
 import { addTaskToBoard } from "../../../redux/appReducer";
 import { SubTaskStatus } from "../../../models";
 import { generateId } from "../../../utils/id-generator";
+import useTaskValidation from "../../../utils/validators/task-validator";
+import { isEmpty } from "../../../utils/utils";
 
 import "./new-task-popup.scss";
 
@@ -32,30 +34,78 @@ export default function NewTaskPopup({ close }: { close: () => void }) {
 		selectedBoard?.columns[0].title
 	);
 	const [newSubtask, setNewSubtask] = useState("");
+	const [validationResult, setValidationResult] =
+		useState<Record<string, string>>();
 	const dispatch = useDispatch();
+	const { validateTask } = useTaskValidation();
 
 	const addNewSubtask = (e: React.FormEvent<HTMLButtonElement>) => {
 		e.preventDefault();
 		setIsNewSubtaskInputVisible(true);
 	};
 
+	const isNewSubtaskValid = (): boolean => {
+		if (isEmpty(newSubtask)) {
+			setValidationResult((prevState) => {
+				return {
+					...prevState,
+					...{ newSubtask: "Subtask title is Required" },
+				};
+			});
+
+			return false;
+		}
+
+		const allSubtasksTitles = newTask.subtasks.map((x) => x.title);
+		if (allSubtasksTitles.includes(newSubtask)) {
+			setValidationResult((prevState) => {
+				return {
+					...prevState,
+					...{ newSubtask: "Subtask title should be unique" },
+				};
+			});
+
+			return false;
+		}
+
+		return true;
+	};
+
 	const saveSubtask = () => {
-		dispatch(addSubtask({ title: newSubtask, status: SubTaskStatus.Todo }));
-		setIsNewSubtaskInputVisible(false);
+		if (isNewSubtaskValid()) {
+			dispatch(addSubtask({ title: newSubtask, status: SubTaskStatus.Todo }));
+			setIsNewSubtaskInputVisible(false);
+			setValidationResult((prevState) => {
+				const filteredValidations: Record<string, string> = {};
+				for (let key in prevState) {
+					if (key !== "newSubtask") {
+						filteredValidations[key] = prevState[key];
+					}
+				}
+
+				return filteredValidations;
+			});
+		}
 	};
 
 	const saveTask = () => {
-		const taskId = generateId();
-		dispatch(
-			addTaskToBoard({
-				...newTask,
-				status: selectedStatus!,
-				boardId: selectedBoard?.id!,
-				id: taskId,
-			})
-		);
-		dispatch(resetTask());
-		close();
+		const validationResult = validateTask(newTask);
+		setValidationResult(validationResult);
+		console.log(validationResult);
+
+		if (Object.keys(validationResult).length === 0) {
+			const taskId = generateId();
+			dispatch(
+				addTaskToBoard({
+					...newTask,
+					status: selectedStatus!,
+					boardId: selectedBoard?.id!,
+					id: taskId,
+				})
+			);
+			dispatch(resetTask());
+			close();
+		}
 	};
 
 	return (
@@ -63,8 +113,18 @@ export default function NewTaskPopup({ close }: { close: () => void }) {
 			<h2>Add new task</h2>
 			<form className="task-form">
 				<div className="task-title">
-					<label htmlFor="taskTitle">Title</label>
+					<label className="label-error" htmlFor="taskTitle">
+						Title
+						{!!validationResult && !!validationResult["taskTitle"] && (
+							<span className="error">{validationResult["taskTitle"]}</span>
+						)}
+					</label>
 					<input
+						className={
+							!!validationResult && !!validationResult["taskTitle"]
+								? "error"
+								: ""
+						}
 						name="taskTitle"
 						id="taskTitle"
 						placeholder="e.g. Take coffee break"
@@ -73,8 +133,20 @@ export default function NewTaskPopup({ close }: { close: () => void }) {
 				</div>
 
 				<div className="task-description">
-					<label htmlFor="taskDescription">Description</label>
+					<label className="label-error" htmlFor="taskDescription">
+						Title
+						{!!validationResult && !!validationResult["taskDescription"] && (
+							<span className="error">
+								{validationResult["taskDescription"]}
+							</span>
+						)}
+					</label>
 					<textarea
+						className={
+							!!validationResult && !!validationResult["taskDescription"]
+								? "error"
+								: ""
+						}
 						name="taskDescription"
 						id="taskDescription"
 						placeholder="e.g. It's always good to take a break. This 15 break will recharge your batteries a little"
@@ -103,22 +175,39 @@ export default function NewTaskPopup({ close }: { close: () => void }) {
 						</div>
 					)}
 					{isNewSubtaskInputVisible && (
-						<div className="task-new-subtask">
-							<input
-								type="text"
-								placeholder="e.g. Make coffee"
-								onChange={({ target }) => setNewSubtask(target.value)}
-							/>
-							<FontAwesomeIcon icon={faCheck} size="lg" onClick={saveSubtask} />
-							<FontAwesomeIcon
-								icon={faXmark}
-								size="lg"
-								onClick={() => setIsNewSubtaskInputVisible(false)}
-							/>
+						<div className="task-new-subtask-with-errors">
+							{!!validationResult && !!validationResult["newSubtask"] && (
+								<span className="error">{validationResult["newSubtask"]}</span>
+							)}
+							<div className="task-new-subtask">
+								<input
+									className={
+										!!validationResult && !!validationResult["newSubtask"]
+											? "error"
+											: ""
+									}
+									type="text"
+									placeholder="e.g. Make coffee"
+									onChange={({ target }) => setNewSubtask(target.value)}
+								/>
+								<FontAwesomeIcon
+									icon={faCheck}
+									size="lg"
+									onClick={saveSubtask}
+								/>
+								<FontAwesomeIcon
+									icon={faXmark}
+									size="lg"
+									onClick={() => setIsNewSubtaskInputVisible(false)}
+								/>
+							</div>
 						</div>
 					)}
 
-					<button className="new-task-button" onClick={addNewSubtask}>
+					<button
+						className="new-task-button"
+						hidden={isNewSubtaskInputVisible}
+						onClick={addNewSubtask}>
 						Add new subtask
 					</button>
 				</div>

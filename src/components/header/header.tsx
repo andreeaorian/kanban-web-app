@@ -1,12 +1,13 @@
-import { useSelector } from "react-redux";
+import { useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPlus, faBars } from "@fortawesome/free-solid-svg-icons";
 import type { RootState } from "../../redux/store";
-
-import "./header.scss";
-import { useState } from "react";
 import PopupWrapper from "../popups/popup-wrapper";
 import NewTaskPopup from "../popups/newTask/new-task-popup";
+import { resetTask } from "../../redux/taskReducer";
+
+import "./header.scss";
 
 export default function Header() {
 	const board = useSelector((state: RootState) =>
@@ -16,6 +17,7 @@ export default function Header() {
 		(state: RootState) => state.app.showSidebar
 	);
 	const [isNewTaskPopupVisible, setIsNewTaskPopupVisible] = useState(false);
+	const dispatch = useDispatch();
 
 	const openNewTaskPopup = () => {
 		setIsNewTaskPopupVisible(true);
@@ -23,6 +25,7 @@ export default function Header() {
 
 	const closeNewTaskPopup = () => {
 		setIsNewTaskPopupVisible(false);
+		dispatch(resetTask());
 	};
 
 	return (

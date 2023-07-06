@@ -38,7 +38,8 @@
 				}
 			}
 
-			input {
+			input,
+			textarea {
 				&.error {
 					border-color: $red_error;
 				}
