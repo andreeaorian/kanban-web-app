@@ -21,7 +21,7 @@ export default function NewBoardPopup({ close }: { close: () => void }) {
 		useState<Record<string, string>>();
 
 	const dispatch = useDispatch();
-	const { validate } = useBoardValidation();
+	const { validateBoard } = useBoardValidation();
 
 	const addNewColumn = () => {
 		setIsNewColumnInputVisible(true);
@@ -72,7 +72,7 @@ export default function NewBoardPopup({ close }: { close: () => void }) {
 	};
 
 	const saveBoard = () => {
-		const validationResult = validate(board);
+		const validationResult = validateBoard(board);
 		setValidationResult(validationResult);
 		console.log(validationResult);
 

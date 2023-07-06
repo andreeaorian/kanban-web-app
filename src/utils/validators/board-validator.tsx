@@ -27,5 +27,5 @@ export default function useBoardValidation() {
 		return errors;
 	};
 
-	return { validate: validateBoard };
+	return { validateBoard };
 }

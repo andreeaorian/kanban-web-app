@@ -35,7 +35,12 @@ export const taskSlice = createSlice({
 			state.subtasks = newSubtasks;
 		},
 		resetTask: (state) => {
-			state = { ...initialState };
+			state.id = initialState.id;
+			state.title = initialState.title;
+			state.description = initialState.description;
+			state.subtasks = initialState.subtasks;
+			state.status = initialState.status;
+			state.boardId = initialState.boardId;
 		},
 	},
 });
