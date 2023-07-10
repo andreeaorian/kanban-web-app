@@ -11,6 +11,8 @@ export default function ThemeChanger() {
 	const isDarkTheme = useSelector((state: RootState) => state.app.isDarkTheme);
 	const dispatch = useDispatch();
 
+	const changeThemeHandler = () => dispatch(changeTheme());
+
 	return (
 		<div className="theme-changer">
 			<label htmlFor="themeToggle" className="theme-toggle">
@@ -20,7 +22,7 @@ export default function ThemeChanger() {
 					type="checkbox"
 					id="themeToggle"
 					checked={isDarkTheme}
-					onChange={() => dispatch(changeTheme())}
+					onChange={changeThemeHandler}
 				/>
 				<span className="theme-toggle-handler" />
 				<FontAwesomeIcon icon={faMoon} className="theme-night" size="lg" />

@@ -13,10 +13,13 @@ export default function SidebarBoardCard({
 	isSelected: boolean;
 }) {
 	const dispatch = useDispatch();
+
+	const selectABoard = () => dispatch(selectBoard(boardName));
+
 	return (
 		<div
 			className={`sidebar-board-card ${isSelected ? "selected" : ""}`}
-			onClick={() => dispatch(selectBoard(boardName))}
+			onClick={selectABoard}
 			title={boardName}>
 			<FontAwesomeIcon icon={faTableList} flip="both" />
 			<span>{boardName}</span>

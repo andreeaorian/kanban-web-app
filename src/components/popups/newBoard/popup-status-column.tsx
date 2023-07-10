@@ -11,6 +11,8 @@ import { deleteColumn } from "../../../redux/boardReducer";
 export default function PopupStatusColumn({ title, color }: Column) {
 	const dispatch = useDispatch();
 
+	const deleteColumnHandler = () => dispatch(deleteColumn(title));
+
 	return (
 		<div className="status-column">
 			<div className="status-details">
@@ -19,10 +21,7 @@ export default function PopupStatusColumn({ title, color }: Column) {
 			</div>
 			<div className="status-icons">
 				<FontAwesomeIcon icon={faPenToSquare} />
-				<FontAwesomeIcon
-					icon={faTrash}
-					onClick={() => dispatch(deleteColumn(title))}
-				/>
+				<FontAwesomeIcon icon={faTrash} onClick={deleteColumnHandler} />
 			</div>
 		</div>
 	);

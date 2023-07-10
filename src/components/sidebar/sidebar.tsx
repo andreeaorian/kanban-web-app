@@ -34,6 +34,8 @@ export default function Sidebar() {
 		dispatch(resetBoard());
 	};
 
+	const changeVisibility = () => dispatch(changeSidebarVisibility());
+
 	return (
 		<>
 			<div className={`sidebar ${isSidebarVisible ? "" : "hidden"}`}>
@@ -63,9 +65,7 @@ export default function Sidebar() {
 				</div>
 				<div className="sidebar-bottom">
 					<ThemeChanger />
-					<div
-						className="sidebar-hide-button"
-						onClick={() => dispatch(changeSidebarVisibility())}>
+					<div className="sidebar-hide-button" onClick={changeVisibility}>
 						<FontAwesomeIcon icon={faEyeSlash} />
 						<span>Hide Sidebar</span>
 					</div>

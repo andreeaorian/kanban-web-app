@@ -108,6 +108,18 @@ export default function NewTaskPopup({ close }: { close: () => void }) {
 		}
 	};
 
+	const changeDescriptionHandler = (
+		e: React.ChangeEvent<HTMLTextAreaElement>
+	) => dispatch(changeDescription(e.target.value));
+
+	const createNewSubtask = (e: React.ChangeEvent<HTMLInputElement>): void =>
+		setNewSubtask(e.target.value);
+
+	const revertCreatingSubtask = () => setIsNewSubtaskInputVisible(false);
+
+	const changeStatusValue = (e: React.ChangeEvent<HTMLSelectElement>) =>
+		setSelectedStatus(e.target.value);
+
 	return (
 		<>
 			<h2>Add new task</h2>
@@ -150,7 +162,7 @@ export default function NewTaskPopup({ close }: { close: () => void }) {
 						name="taskDescription"
 						id="taskDescription"
 						placeholder="e.g. It's always good to take a break. This 15 break will recharge your batteries a little"
-						onChange={({ target }) => dispatch(changeDescription(target.value))}
+						onChange={changeDescriptionHandler}
 					/>
 				</div>
 
@@ -159,15 +171,14 @@ export default function NewTaskPopup({ close }: { close: () => void }) {
 					{newTask.subtasks.length > 0 && (
 						<div className="subtasks-list">
 							{newTask.subtasks.map((s) => {
+								const deleteSubTask = () => dispatch(deleteSubtask(s.title));
+
 								return (
 									<div className="subtask" key={s.title}>
 										<div className="subtask-title">{s.title}</div>
 										<div className="subtask-icons">
 											<FontAwesomeIcon icon={faPenToSquare} />
-											<FontAwesomeIcon
-												icon={faTrash}
-												onClick={() => dispatch(deleteSubtask(s.title))}
-											/>
+											<FontAwesomeIcon icon={faTrash} onClick={deleteSubTask} />
 										</div>
 									</div>
 								);
@@ -188,7 +199,7 @@ export default function NewTaskPopup({ close }: { close: () => void }) {
 									}
 									type="text"
 									placeholder="e.g. Make coffee"
-									onChange={({ target }) => setNewSubtask(target.value)}
+									onChange={createNewSubtask}
 								/>
 								<FontAwesomeIcon
 									icon={faCheck}
@@ -198,7 +209,7 @@ export default function NewTaskPopup({ close }: { close: () => void }) {
 								<FontAwesomeIcon
 									icon={faXmark}
 									size="lg"
-									onClick={() => setIsNewSubtaskInputVisible(false)}
+									onClick={revertCreatingSubtask}
 								/>
 							</div>
 						</div>
@@ -219,7 +230,7 @@ export default function NewTaskPopup({ close }: { close: () => void }) {
 							name="status"
 							id="status"
 							value={selectedStatus}
-							onChange={(e) => setSelectedStatus(e.target.value)}>
+							onChange={changeStatusValue}>
 							{selectedBoard?.columns?.map((c) => {
 								return (
 									<option key={c.title} value={c.title}>

@@ -83,6 +83,19 @@ export default function NewBoardPopup({ close }: { close: () => void }) {
 		}
 	};
 
+	const changeColor = (e: React.ChangeEvent<HTMLInputElement>): void => {
+		setColorInputValue(e.target.value);
+	};
+
+	const changeColumnName = (e: React.ChangeEvent<HTMLInputElement>): void => {
+		setTextInputValue(e.target.value);
+	};
+
+	const changeBoardTitle = (e: React.ChangeEvent<HTMLInputElement>) =>
+		dispatch(changeTitle(e.target.value));
+
+	const revertAddingNewColumn = () => setIsNewColumnInputVisible(false);
+
 	return (
 		<>
 			<h2>Add new board</h2>
@@ -103,7 +116,7 @@ export default function NewBoardPopup({ close }: { close: () => void }) {
 						name="boardName"
 						id="boardName"
 						placeholder="e.g. First Board"
-						onChange={({ target }) => dispatch(changeTitle(target.value))}
+						onChange={changeBoardTitle}
 					/>
 				</div>
 				<div className="board-column-list">
@@ -137,16 +150,9 @@ export default function NewBoardPopup({ close }: { close: () => void }) {
 									<input
 										type="text"
 										placeholder="e.g. Testing"
-										onChange={({ target }) => {
-											setTextInputValue(target.value);
-										}}
+										onChange={changeColumnName}
 									/>
-									<input
-										type="color"
-										onChange={({ target }) => {
-											setColorInputValue(target.value);
-										}}
-									/>
+									<input type="color" onChange={changeColor} />
 								</div>
 								<FontAwesomeIcon
 									icon={faCheck}
@@ -156,7 +162,7 @@ export default function NewBoardPopup({ close }: { close: () => void }) {
 								<FontAwesomeIcon
 									icon={faXmark}
 									size="lg"
-									onClick={() => setIsNewColumnInputVisible(false)}
+									onClick={revertAddingNewColumn}
 								/>
 							</div>
 						</div>
