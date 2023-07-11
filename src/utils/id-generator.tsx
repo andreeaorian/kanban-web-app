@@ -1,10 +1,9 @@
 function generateId(): string {
-	const length = 10;
 	const charset =
 		"ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
 	let randomString = "";
 
-	for (let i = 0; i < length; i++) {
+	for (let i = 0; i < 10; i++) {
 		const randomIndex = Math.floor(Math.random() * charset.length);
 		randomString += charset[randomIndex];
 	}
