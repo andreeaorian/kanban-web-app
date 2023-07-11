@@ -24,10 +24,9 @@ export const boardSlice = createSlice({
 		},
 
 		deleteColumn: (state, action: PayloadAction<string>) => {
-			const newColumns = state.columns.filter(
+			state.columns = state.columns.filter(
 				(column) => column.title !== action.payload
 			);
-			state.columns = newColumns;
 		},
 
 		addColumn: (state, action: PayloadAction<Column>) => {

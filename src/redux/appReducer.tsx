@@ -67,26 +67,20 @@ export const appSlice = createSlice({
 			state.boards.push(action.payload);
 		},
 		selectBoard: (state, action: PayloadAction<string>) => {
-			const allBoards = [...state.boards];
-			allBoards.forEach((board) => {
+			state.boards.forEach((board) => {
 				if (board.title === action.payload) {
 					board.isSelected = true;
 				} else {
 					board.isSelected = false;
 				}
 			});
-
-			state.boards = allBoards;
 		},
 		addTaskToBoard: (state, action: PayloadAction<Task>) => {
-			const allBoards = [...state.boards];
-			allBoards.forEach((board) => {
+			state.boards.forEach((board) => {
 				if (board.id === action.payload.boardId) {
 					board.tasks = board.tasks?.concat(action.payload);
 				}
 			});
-
-			state.boards = allBoards;
 		},
 		changeSidebarVisibility: (state) => {
 			state.showSidebar = !state.showSidebar;
