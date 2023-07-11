@@ -27,7 +27,5 @@ export default function PopupWrapper({
 				<div className="box-content">{content}</div>
 			</div>
 		</div>
-	) : (
-		<></>
-	);
+	) : null;
 }

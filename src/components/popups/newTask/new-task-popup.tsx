@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import {
 	faXmark,
@@ -30,40 +30,38 @@ export default function NewTaskPopup({ close }: { close: () => void }) {
 	);
 	const [isNewSubtaskInputVisible, setIsNewSubtaskInputVisible] =
 		useState(false);
-	const [selectedStatus, setSelectedStatus] = useState(
-		selectedBoard?.columns[0].title
-	);
+	const [selectedStatus, setSelectedStatus] = useState("");
 	const [newSubtask, setNewSubtask] = useState("");
 	const [validationResult, setValidationResult] =
 		useState<Record<string, string>>();
 	const dispatch = useDispatch();
 	const { validateTask } = useTaskValidation();
 
+	useEffect(() => {
+		setSelectedStatus(selectedBoard?.columns[0].title!);
+	}, [selectedBoard]);
+
 	const addNewSubtask = (e: React.FormEvent<HTMLButtonElement>) => {
 		e.preventDefault();
 		setIsNewSubtaskInputVisible(true);
 	};
 
-	const isNewSubtaskValid = (): boolean => {
+	const validateNewSubtask = (): boolean => {
 		if (isEmpty(newSubtask)) {
-			setValidationResult((prevState) => {
-				return {
-					...prevState,
-					...{ newSubtask: "Subtask title is Required" },
-				};
-			});
+			setValidationResult((prevState) => ({
+				...prevState,
+				...{ newSubtask: "Subtask title is Required" },
+			}));
 
 			return false;
 		}
 
 		const allSubtasksTitles = newTask.subtasks.map((x) => x.title);
 		if (allSubtasksTitles.includes(newSubtask)) {
-			setValidationResult((prevState) => {
-				return {
-					...prevState,
-					...{ newSubtask: "Subtask title should be unique" },
-				};
-			});
+			setValidationResult((prevState) => ({
+				...prevState,
+				...{ newSubtask: "Subtask title should be unique" },
+			}));
 
 			return false;
 		}
@@ -72,7 +70,7 @@ export default function NewTaskPopup({ close }: { close: () => void }) {
 	};
 
 	const saveSubtask = () => {
-		if (isNewSubtaskValid()) {
+		if (validateNewSubtask()) {
 			dispatch(addSubtask({ title: newSubtask, status: SubTaskStatus.Todo }));
 			setIsNewSubtaskInputVisible(false);
 			setValidationResult((prevState) => {
@@ -231,13 +229,11 @@ export default function NewTaskPopup({ close }: { close: () => void }) {
 							id="status"
 							value={selectedStatus}
 							onChange={changeStatusValue}>
-							{selectedBoard?.columns?.map((c) => {
-								return (
-									<option key={c.title} value={c.title}>
-										{c.title}
-									</option>
-								);
-							})}
+							{selectedBoard?.columns?.map(({ title }) => (
+								<option key={title} value={title}>
+									{title}
+								</option>
+							))}
 						</select>
 					</div>
 				</div>

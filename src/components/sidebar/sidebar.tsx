@@ -47,15 +47,13 @@ export default function Sidebar() {
 					<span className="sidebar-boards-all">
 						All boards ({boards.length})
 					</span>
-					{boards.map((board) => {
-						return (
-							<SidebarBoardCard
-								boardName={board.title}
-								key={board.id}
-								isSelected={board.isSelected}
-							/>
-						);
-					})}
+					{boards.map(({ title, id, isSelected }) => (
+						<SidebarBoardCard
+							boardName={title}
+							key={id}
+							isSelected={isSelected}
+						/>
+					))}
 					<div
 						className="sidebar-board-card sidebar-new-board"
 						onClick={addNewBoad}>
