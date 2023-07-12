@@ -1,4 +1,3 @@
-import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPlus, faBars } from "@fortawesome/free-solid-svg-icons";
@@ -8,6 +7,7 @@ import NewTaskPopup from "../popups/newTask/new-task-popup";
 import { resetTask } from "../../redux/taskReducer";
 
 import "./header.scss";
+import { setNewTaskPopupVisibility } from "../../redux/appReducer";
 
 export default function Header() {
 	const board = useSelector((state: RootState) =>
@@ -16,15 +16,17 @@ export default function Header() {
 	const isSidebarVisible = useSelector(
 		(state: RootState) => state.app.showSidebar
 	);
-	const [isNewTaskPopupVisible, setIsNewTaskPopupVisible] = useState(false);
+	const isNewTaskPopupVisible = useSelector(
+		(state: RootState) => state.app.isNewTaskPopupVisible
+	);
 	const dispatch = useDispatch();
 
 	const openNewTaskPopup = () => {
-		setIsNewTaskPopupVisible(true);
+		dispatch(setNewTaskPopupVisibility(true));
 	};
 
 	const closeNewTaskPopup = () => {
-		setIsNewTaskPopupVisible(false);
+		dispatch(setNewTaskPopupVisibility(false));
 		dispatch(resetTask());
 	};
 
@@ -44,9 +46,9 @@ export default function Header() {
 			</header>
 			<PopupWrapper
 				isVisible={isNewTaskPopupVisible}
-				closePopup={closeNewTaskPopup}
-				content={<NewTaskPopup close={closeNewTaskPopup} />}
-			/>
+				closePopup={closeNewTaskPopup}>
+				<NewTaskPopup close={closeNewTaskPopup} />
+			</PopupWrapper>
 		</>
 	);
 }

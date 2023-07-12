@@ -1,4 +1,3 @@
-import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
@@ -12,7 +11,10 @@ import SidebarBoardCard from "./components/sidebar-board";
 import PopupWrapper from "../popups/popup-wrapper";
 import NewBoardPopup from "../popups/newBoard/new-board-popup";
 import { resetBoard } from "../../redux/boardReducer";
-import { changeSidebarVisibility } from "../../redux/appReducer";
+import {
+	changeSidebarVisibility,
+	setNewBoardPopupVisibility,
+} from "../../redux/appReducer";
 import ThemeChanger from "./components/theme-changer";
 
 import "./sidebar.scss";
@@ -22,15 +24,17 @@ export default function Sidebar() {
 	const isSidebarVisible = useSelector(
 		(state: RootState) => state.app.showSidebar
 	);
-	const [isNewBoardPopupVisible, setIsNewBoardPopupVisible] = useState(false);
+	const isNewBoardPopupVisible = useSelector(
+		(state: RootState) => state.app.isNewBoardPopupVisible
+	);
 	const dispatch = useDispatch();
 
 	const addNewBoad = () => {
-		setIsNewBoardPopupVisible(true);
+		dispatch(setNewBoardPopupVisibility(true));
 	};
 
 	const handleClosePopup = () => {
-		setIsNewBoardPopupVisible(false);
+		dispatch(setNewBoardPopupVisibility(false));
 		dispatch(resetBoard());
 	};
 
@@ -71,9 +75,9 @@ export default function Sidebar() {
 			</div>
 			<PopupWrapper
 				isVisible={isNewBoardPopupVisible}
-				closePopup={handleClosePopup}
-				content={<NewBoardPopup close={handleClosePopup} />}
-			/>
+				closePopup={handleClosePopup}>
+				<NewBoardPopup close={handleClosePopup} />
+			</PopupWrapper>
 		</>
 	);
 }

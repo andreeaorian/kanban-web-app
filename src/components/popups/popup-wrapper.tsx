@@ -7,13 +7,13 @@ import "./popup.scss";
 type PopupProps = {
 	isVisible: boolean;
 	closePopup: (event: React.MouseEvent<SVGSVGElement, MouseEvent>) => void;
-	content: JSX.Element;
+	children: JSX.Element | JSX.Element[];
 };
 
 export default function PopupWrapper({
 	isVisible,
 	closePopup,
-	content,
+	children,
 }: PopupProps) {
 	return isVisible ? (
 		<div className="popup-box">
@@ -24,7 +24,7 @@ export default function PopupWrapper({
 					onClick={closePopup}
 					size="lg"
 				/>
-				<div className="box-content">{content}</div>
+				<div className="box-content">{children}</div>
 			</div>
 		</div>
 	) : null;

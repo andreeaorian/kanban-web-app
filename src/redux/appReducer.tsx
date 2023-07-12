@@ -4,6 +4,8 @@ import { Board, Task, SubTaskStatus } from "../models";
 
 export interface App {
 	isDarkTheme: boolean;
+	isNewBoardPopupVisible: boolean;
+	isNewTaskPopupVisible: boolean;
 	showSidebar: boolean;
 	boards: Board[];
 }
@@ -11,6 +13,8 @@ export interface App {
 const initialState: App = {
 	isDarkTheme: true,
 	showSidebar: true,
+	isNewBoardPopupVisible: false,
+	isNewTaskPopupVisible: false,
 	boards: [
 		{
 			id: "2sD4f9jKpR",
@@ -85,6 +89,12 @@ export const appSlice = createSlice({
 		changeSidebarVisibility: (state) => {
 			state.showSidebar = !state.showSidebar;
 		},
+		setNewBoardPopupVisibility: (state, action: PayloadAction<boolean>) => {
+			state.isNewBoardPopupVisible = action.payload;
+		},
+		setNewTaskPopupVisibility: (state, action: PayloadAction<boolean>) => {
+			state.isNewTaskPopupVisible = action.payload;
+		},
 	},
 });
 
@@ -95,6 +105,8 @@ export const {
 	selectBoard,
 	addTaskToBoard,
 	changeSidebarVisibility,
+	setNewBoardPopupVisibility,
+	setNewTaskPopupVisibility,
 } = appSlice.actions;
 
 export default appSlice.reducer;
