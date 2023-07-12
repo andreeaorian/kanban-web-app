@@ -1,11 +1,6 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import {
-	faXmark,
-	faCheck,
-	faTrash,
-	faPenToSquare,
-} from "@fortawesome/free-solid-svg-icons";
+import { faTrash, faPenToSquare } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { RootState } from "../../../redux/store";
 import {
@@ -19,7 +14,7 @@ import { addTaskToBoard } from "../../../redux/appReducer";
 import { SubTaskStatus } from "../../../models";
 import { generateId } from "../../../utils/id-generator";
 import useTaskValidation from "../../../utils/validators/task-validator";
-import { isEmpty } from "../../../utils/utils";
+import ActionableInput from "../components/actionable-input";
 
 import "./new-task-popup.scss";
 
@@ -31,11 +26,13 @@ export default function NewTaskPopup({ close }: { close: () => void }) {
 	const [isNewSubtaskInputVisible, setIsNewSubtaskInputVisible] =
 		useState(false);
 	const [selectedStatus, setSelectedStatus] = useState("");
-	const [newSubtask, setNewSubtask] = useState("");
 	const [validationResult, setValidationResult] =
 		useState<Record<string, string>>();
 	const dispatch = useDispatch();
 	const { validateTask } = useTaskValidation();
+	const allSubtasksTitles = useMemo(() => {
+		return newTask.subtasks.map((x) => x.title);
+	}, [newTask]);
 
 	useEffect(() => {
 		setSelectedStatus(selectedBoard?.columns[0].title!);
@@ -46,45 +43,13 @@ export default function NewTaskPopup({ close }: { close: () => void }) {
 		setIsNewSubtaskInputVisible(true);
 	};
 
-	const validateNewSubtask = (): boolean => {
-		if (isEmpty(newSubtask)) {
-			setValidationResult((prevState) => ({
-				...prevState,
-				...{ newSubtask: "Subtask title is Required" },
-			}));
-
-			return false;
-		}
-
-		const allSubtasksTitles = newTask.subtasks.map((x) => x.title);
-		if (allSubtasksTitles.includes(newSubtask)) {
-			setValidationResult((prevState) => ({
-				...prevState,
-				...{ newSubtask: "Subtask title should be unique" },
-			}));
-
-			return false;
-		}
-
-		return true;
-	};
-
-	const saveSubtask = () => {
-		if (validateNewSubtask()) {
-			dispatch(addSubtask({ title: newSubtask, status: SubTaskStatus.Todo }));
+	const saveSubtask = useCallback(
+		(name: string) => {
+			dispatch(addSubtask({ title: name, status: SubTaskStatus.Todo }));
 			setIsNewSubtaskInputVisible(false);
-			setValidationResult((prevState) => {
-				const filteredValidations: Record<string, string> = {};
-				for (let key in prevState) {
-					if (key !== "newSubtask") {
-						filteredValidations[key] = prevState[key];
-					}
-				}
-
-				return filteredValidations;
-			});
-		}
-	};
+		},
+		[dispatch]
+	);
 
 	const saveTask = () => {
 		const validationResult = validateTask(newTask);
@@ -109,9 +74,6 @@ export default function NewTaskPopup({ close }: { close: () => void }) {
 	const changeDescriptionHandler = (
 		e: React.ChangeEvent<HTMLTextAreaElement>
 	) => dispatch(changeDescription(e.target.value));
-
-	const createNewSubtask = (e: React.ChangeEvent<HTMLInputElement>): void =>
-		setNewSubtask(e.target.value);
 
 	const revertCreatingSubtask = () => setIsNewSubtaskInputVisible(false);
 
@@ -184,33 +146,14 @@ export default function NewTaskPopup({ close }: { close: () => void }) {
 						</div>
 					)}
 					{isNewSubtaskInputVisible && (
-						<div className="task-new-subtask-with-errors">
-							{!!validationResult && !!validationResult["newSubtask"] && (
-								<span className="error">{validationResult["newSubtask"]}</span>
-							)}
-							<div className="task-new-subtask">
-								<input
-									className={
-										!!validationResult && !!validationResult["newSubtask"]
-											? "error"
-											: ""
-									}
-									type="text"
-									placeholder="e.g. Make coffee"
-									onChange={createNewSubtask}
-								/>
-								<FontAwesomeIcon
-									icon={faCheck}
-									size="lg"
-									onClick={saveSubtask}
-								/>
-								<FontAwesomeIcon
-									icon={faXmark}
-									size="lg"
-									onClick={revertCreatingSubtask}
-								/>
-							</div>
-						</div>
+						<ActionableInput
+							inputName="newSubtask"
+							inputPlaceholder="e.g. Make coffee"
+							hasColor={false}
+							similarNames={allSubtasksTitles}
+							save={saveSubtask}
+							revertChanges={revertCreatingSubtask}
+						/>
 					)}
 
 					<button

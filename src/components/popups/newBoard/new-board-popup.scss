@@ -54,72 +54,6 @@
 			}
 		}
 	}
-
-	.new-column-with-errors {
-		.error {
-			color: $red_error;
-			font-size: 0.75rem;
-			font-weight: 600;
-			float: right;
-			padding-right: 3rem;
-			padding-bottom: 0.25rem;
-		}
-
-		.new-column {
-			height: 2rem;
-			width: 100%;
-			display: flex;
-			gap: 0.5rem;
-			justify-content: center;
-			align-items: center;
-
-			.new-column-inputs {
-				display: flex;
-				justify-content: space-between;
-				align-items: center;
-				width: 100%;
-				border: 0.063rem solid $gray;
-				border-radius: 0.25rem;
-				padding: 0 0.5rem;
-
-				input[type="text"] {
-					background-color: inherit;
-					width: 80%;
-					height: 2rem;
-					padding: 0.25rem;
-					border: none;
-					outline: none;
-				}
-
-				input[type="color"] {
-					appearance: none;
-					background: none;
-					border: none;
-					width: 2rem;
-					height: 2rem;
-					border-radius: 50%;
-					cursor: pointer;
-
-					&::-webkit-color-swatch {
-						border: none;
-					}
-				}
-
-				input[type="color"]::-webkit-color-swatch-wrapper,
-				input[type="color"]::-webkit-color-swatch {
-					border-radius: 50%;
-				}
-
-				&.error {
-					border-color: $red_error;
-				}
-			}
-
-			svg {
-				cursor: pointer;
-			}
-		}
-	}
 }
 
 .board-buttons {
@@ -167,14 +101,6 @@
 		.status-column {
 			color: $white;
 		}
-
-		.new-column {
-			.new-column-inputs {
-				input[type="text"] {
-					color: $white;
-				}
-			}
-		}
 	}
 
 	.board-buttons {
@@ -204,18 +130,6 @@
 			color: $black;
 
 			.status-icons {
-				color: $gray;
-			}
-		}
-
-		.new-column {
-			.new-column-inputs {
-				input[type="text"] {
-					color: $black;
-				}
-			}
-
-			svg {
 				color: $gray;
 			}
 		}

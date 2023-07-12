@@ -1,7 +1,5 @@
-import { useState } from "react";
+import { useState, useMemo, useCallback } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faCheck, faXmark } from "@fortawesome/free-solid-svg-icons";
 import type { RootState } from "../../../redux/store";
 import PopupStatusColumn from "./popup-status-column";
 import { addColumn, changeTitle } from "../../../redux/boardReducer";
@@ -10,66 +8,31 @@ import { generateId } from "../../../utils/id-generator";
 
 import "./new-board-popup.scss";
 import useBoardValidation from "../../../utils/validators/board-validator";
-import { isEmpty } from "../../../utils/utils";
+import ActionableInput from "../components/actionable-input";
 
 export default function NewBoardPopup({ close }: { close: () => void }) {
 	const board = useSelector((state: RootState) => state.board);
 	const [isNewColumnInputVisible, setIsNewColumnInputVisible] = useState(false);
-	const [textInputValue, setTextInputValue] = useState<string>("");
-	const [colorInputValue, setColorInputValue] = useState<string>("");
 	const [validationResult, setValidationResult] =
 		useState<Record<string, string>>();
 
 	const dispatch = useDispatch();
 	const { validateBoard } = useBoardValidation();
+	const allColumnNames = useMemo(() => {
+		return board.columns.map((x) => x.title);
+	}, [board.columns]);
 
 	const addNewColumn = () => {
 		setIsNewColumnInputVisible(true);
 	};
 
-	const isNewColumnValid = (): boolean => {
-		if (isEmpty(textInputValue)) {
-			setValidationResult((prevState) => {
-				return {
-					...prevState,
-					...{ newColumn: "Column name is Required" },
-				};
-			});
-
-			return false;
-		}
-
-		const allColumnNames = board.columns.map((x) => x.title);
-		if (allColumnNames.includes(textInputValue)) {
-			setValidationResult((prevState) => {
-				return {
-					...prevState,
-					...{ newColumn: "Column name should be unique" },
-				};
-			});
-
-			return false;
-		}
-
-		return true;
-	};
-
-	const saveColumn = () => {
-		if (isNewColumnValid()) {
-			dispatch(addColumn({ title: textInputValue, color: colorInputValue }));
+	const saveColumn = useCallback(
+		(title: string, color?: string) => {
+			dispatch(addColumn({ title: title, color: color! }));
 			setIsNewColumnInputVisible(false);
-			setValidationResult((prevState) => {
-				const filteredValidations: Record<string, string> = {};
-				for (let key in prevState) {
-					if (key !== "newColumn") {
-						filteredValidations[key] = prevState[key];
-					}
-				}
-
-				return filteredValidations;
-			});
-		}
-	};
+		},
+		[dispatch]
+	);
 
 	const saveBoard = () => {
 		const validationResult = validateBoard(board);
@@ -81,14 +44,6 @@ export default function NewBoardPopup({ close }: { close: () => void }) {
 			dispatch(addBoard({ ...board, id: boardId }));
 			close();
 		}
-	};
-
-	const changeColor = (e: React.ChangeEvent<HTMLInputElement>): void => {
-		setColorInputValue(e.target.value);
-	};
-
-	const changeColumnName = (e: React.ChangeEvent<HTMLInputElement>): void => {
-		setTextInputValue(e.target.value);
 	};
 
 	const changeBoardTitle = (e: React.ChangeEvent<HTMLInputElement>) =>
@@ -136,36 +91,14 @@ export default function NewBoardPopup({ close }: { close: () => void }) {
 						);
 					})}
 					{isNewColumnInputVisible && (
-						<div className="new-column-with-errors">
-							{!!validationResult && !!validationResult["newColumn"] && (
-								<span className="error">{validationResult["newColumn"]}</span>
-							)}
-							<div className="new-column">
-								<div
-									className={`new-column-inputs ${
-										!!validationResult && !!validationResult["newColumn"]
-											? "error"
-											: ""
-									}`}>
-									<input
-										type="text"
-										placeholder="e.g. Testing"
-										onChange={changeColumnName}
-									/>
-									<input type="color" onChange={changeColor} />
-								</div>
-								<FontAwesomeIcon
-									icon={faCheck}
-									size="lg"
-									onClick={saveColumn}
-								/>
-								<FontAwesomeIcon
-									icon={faXmark}
-									size="lg"
-									onClick={revertAddingNewColumn}
-								/>
-							</div>
-						</div>
+						<ActionableInput
+							inputName="newColumn"
+							inputPlaceholder="e.g. Testing"
+							hasColor={true}
+							similarNames={allColumnNames}
+							save={saveColumn}
+							revertChanges={revertAddingNewColumn}
+						/>
 					)}
 				</div>
 			</form>
