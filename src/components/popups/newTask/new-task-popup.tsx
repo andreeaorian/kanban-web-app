@@ -1,7 +1,5 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { faTrash, faPenToSquare } from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { RootState } from "../../../redux/store";
 import {
 	changeTitle,
@@ -15,6 +13,7 @@ import { SubTaskStatus } from "../../../models";
 import { generateId } from "../../../utils/id-generator";
 import useTaskValidation from "../../../utils/validators/task-validator";
 import ActionableInput from "../components/actionable-input";
+import PopupListActionableValue from "../components/popup-list-actionable-value";
 
 import "./new-task-popup.scss";
 
@@ -80,6 +79,9 @@ export default function NewTaskPopup({ close }: { close: () => void }) {
 	const changeStatusValue = (e: React.ChangeEvent<HTMLSelectElement>) =>
 		setSelectedStatus(e.target.value);
 
+	const deleteSubtaskHandler = (title: string) =>
+		dispatch(deleteSubtask(title));
+
 	return (
 		<>
 			<h2>Add new task</h2>
@@ -130,19 +132,14 @@ export default function NewTaskPopup({ close }: { close: () => void }) {
 					<div>Subtasks</div>
 					{newTask.subtasks.length > 0 && (
 						<div className="subtasks-list">
-							{newTask.subtasks.map((s) => {
-								const deleteSubTask = () => dispatch(deleteSubtask(s.title));
-
-								return (
-									<div className="subtask" key={s.title}>
-										<div className="subtask-title">{s.title}</div>
-										<div className="subtask-icons">
-											<FontAwesomeIcon icon={faPenToSquare} />
-											<FontAwesomeIcon icon={faTrash} onClick={deleteSubTask} />
-										</div>
-									</div>
-								);
-							})}
+							{newTask.subtasks.map(({ title }) => (
+								<PopupListActionableValue
+									title={title}
+									hasColor={false}
+									key={title}
+									deleteHandler={deleteSubtaskHandler}
+								/>
+							))}
 						</div>
 					)}
 					{isNewSubtaskInputVisible && (

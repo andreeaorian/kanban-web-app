@@ -1,8 +1,12 @@
 import { useState, useMemo, useCallback } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import type { RootState } from "../../../redux/store";
-import PopupStatusColumn from "./popup-status-column";
-import { addColumn, changeTitle } from "../../../redux/boardReducer";
+import PopupListActionableValue from "../components/popup-list-actionable-value";
+import {
+	addColumn,
+	changeTitle,
+	deleteColumn,
+} from "../../../redux/boardReducer";
 import { addBoard } from "../../../redux/appReducer";
 import { generateId } from "../../../utils/id-generator";
 
@@ -49,6 +53,8 @@ export default function NewBoardPopup({ close }: { close: () => void }) {
 	const changeBoardTitle = (e: React.ChangeEvent<HTMLInputElement>) =>
 		dispatch(changeTitle(e.target.value));
 
+	const deleteValue = (title: string) => dispatch(deleteColumn(title));
+
 	const revertAddingNewColumn = () => setIsNewColumnInputVisible(false);
 
 	return (
@@ -81,15 +87,15 @@ export default function NewBoardPopup({ close }: { close: () => void }) {
 							<span className="error">{validationResult["columns"]}</span>
 						)}
 					</div>
-					{board.columns.map((column) => {
-						return (
-							<PopupStatusColumn
-								title={column.title}
-								color={column.color}
-								key={column.title}
-							/>
-						);
-					})}
+					{board.columns.map((column) => (
+						<PopupListActionableValue
+							title={column.title}
+							hasColor={true}
+							color={column.color}
+							key={column.title}
+							deleteHandler={deleteValue}
+						/>
+					))}
 					{isNewColumnInputVisible && (
 						<ActionableInput
 							inputName="newColumn"
