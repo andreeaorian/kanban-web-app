@@ -11,7 +11,7 @@ import {
 import { addTaskToBoard } from "../../../redux/appReducer";
 import { SubTaskStatus } from "../../../models";
 import { generateId } from "../../../utils/id-generator";
-import useTaskValidation from "../../../utils/validators/task-validator";
+import useTaskValidation from "../../../hooks/use-task-validator";
 import ActionableInput from "../components/actionable-input";
 import PopupListActionableValue from "../components/popup-list-actionable-value";
 

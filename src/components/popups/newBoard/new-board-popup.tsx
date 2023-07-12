@@ -11,7 +11,7 @@ import { addBoard } from "../../../redux/appReducer";
 import { generateId } from "../../../utils/id-generator";
 
 import "./new-board-popup.scss";
-import useBoardValidation from "../../../utils/validators/board-validator";
+import useBoardValidation from "../../../hooks/use-board-validator";
 import ActionableInput from "../components/actionable-input";
 
 export default function NewBoardPopup({ close }: { close: () => void }) {

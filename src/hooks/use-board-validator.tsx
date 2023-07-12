@@ -1,7 +1,7 @@
 import { useSelector } from "react-redux";
-import { Board } from "../../models";
-import { RootState } from "../../redux/store";
-import { isEmpty } from "../utils";
+import { Board } from "../models";
+import { RootState } from "../redux/store";
+import { isEmpty } from "../utils/utils";
 type Error = Record<string, string>;
 
 export default function useBoardValidation() {
