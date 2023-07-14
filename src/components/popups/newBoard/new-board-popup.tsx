@@ -9,10 +9,10 @@ import {
 } from "../../../redux/boardReducer";
 import { addBoard } from "../../../redux/appReducer";
 import { generateId } from "../../../utils/id-generator";
-
-import "./new-board-popup.scss";
 import useBoardValidation from "../../../hooks/use-board-validator";
 import ActionableInput from "../components/actionable-input";
+
+import "../form-content.scss";
 
 export default function NewBoardPopup({ close }: { close: () => void }) {
 	const board = useSelector((state: RootState) => state.board);
@@ -69,8 +69,8 @@ export default function NewBoardPopup({ close }: { close: () => void }) {
 	return (
 		<>
 			<h2 className="heading">Add new board</h2>
-			<form>
-				<div className="board-name">
+			<form className="form">
+				<div className="form-simple-item">
 					<label className="label-error" htmlFor="boardName">
 						Board Name
 						{isBoardNameInvalid && (
@@ -85,7 +85,7 @@ export default function NewBoardPopup({ close }: { close: () => void }) {
 						onChange={changeBoardTitle}
 					/>
 				</div>
-				<div className="board-column-list">
+				<div className="form-list-item">
 					<div className="label-error">
 						Columns
 						{areColumnsInvalid && (
@@ -112,7 +112,7 @@ export default function NewBoardPopup({ close }: { close: () => void }) {
 						/>
 					)}
 				</div>
-				<div className="board-buttons">
+				<div className="form-buttons">
 					<button
 						className="create-button"
 						onClick={addNewColumn}

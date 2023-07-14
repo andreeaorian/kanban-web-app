@@ -15,7 +15,7 @@ import useTaskValidation from "../../../hooks/use-task-validator";
 import ActionableInput from "../components/actionable-input";
 import PopupListActionableValue from "../components/popup-list-actionable-value";
 
-import "./new-task-popup.scss";
+import "../form-content.scss";
 
 export default function NewTaskPopup({ close }: { close: () => void }) {
 	const newTask = useSelector((state: RootState) => state.task);
@@ -96,8 +96,8 @@ export default function NewTaskPopup({ close }: { close: () => void }) {
 	return (
 		<>
 			<h2 className="heading">Add new task</h2>
-			<form className="task-form">
-				<div className="task-title">
+			<form className="form">
+				<div className="form-simple-item">
 					<label className="label-error" htmlFor="taskTitle">
 						Title
 						{isTitleInvalid && (
@@ -113,7 +113,7 @@ export default function NewTaskPopup({ close }: { close: () => void }) {
 					/>
 				</div>
 
-				<div className="task-description">
+				<div className="form-simple-item">
 					<label className="label-error" htmlFor="taskDescription">
 						Title
 						{isDescriptionInvalid && (
@@ -129,20 +129,17 @@ export default function NewTaskPopup({ close }: { close: () => void }) {
 					/>
 				</div>
 
-				<div className="task-subtasks">
+				<div className="form-list-item">
 					<div>Subtasks</div>
-					{newTask.subtasks.length > 0 && (
-						<div className="subtasks-list">
-							{newTask.subtasks.map(({ title }) => (
-								<PopupListActionableValue
-									title={title}
-									hasColor={false}
-									key={title}
-									deleteHandler={deleteSubtaskHandler}
-								/>
-							))}
-						</div>
-					)}
+					{newTask.subtasks.length > 0 &&
+						newTask.subtasks.map(({ title }) => (
+							<PopupListActionableValue
+								title={title}
+								hasColor={false}
+								key={title}
+								deleteHandler={deleteSubtaskHandler}
+							/>
+						))}
 					{isNewSubtaskInputVisible && (
 						<ActionableInput
 							inputName="newSubtask"
@@ -162,7 +159,7 @@ export default function NewTaskPopup({ close }: { close: () => void }) {
 					</button>
 				</div>
 
-				<div className="task-status">
+				<div className="form-simple-item">
 					<label htmlFor="status">Status</label>
 					<div className="select">
 						<select
@@ -178,12 +175,15 @@ export default function NewTaskPopup({ close }: { close: () => void }) {
 						</select>
 					</div>
 				</div>
-				<button
-					className="submit-button"
-					disabled={isNewSubtaskInputVisible}
-					onClick={saveTask}>
-					Create task
-				</button>
+
+				<div className="form-buttons">
+					<button
+						className="submit-button"
+						disabled={isNewSubtaskInputVisible}
+						onClick={saveTask}>
+						Create task
+					</button>
+				</div>
 			</form>
 		</>
 	);
