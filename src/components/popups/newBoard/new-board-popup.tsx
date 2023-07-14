@@ -60,7 +60,7 @@ export default function NewBoardPopup({ close }: { close: () => void }) {
 
 	return (
 		<>
-			<h2>Add new board</h2>
+			<h2 className="heading">Add new board</h2>
 			<form>
 				<div className="board-name">
 					<label className="label-error" htmlFor="boardName">

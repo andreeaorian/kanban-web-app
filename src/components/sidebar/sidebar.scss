@@ -19,7 +19,7 @@
 			color: $purplish_blue;
 		}
 
-		h2 {
+		.heading {
 			margin: 0.5rem;
 		}
 	}
@@ -121,7 +121,7 @@
 		color: $gray;
 
 		.sidebar-kanban {
-			h2 {
+			.heading {
 				color: $black;
 			}
 		}

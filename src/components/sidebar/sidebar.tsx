@@ -45,7 +45,7 @@ export default function Sidebar() {
 			<div className={`sidebar ${isSidebarVisible ? "" : "hidden"}`}>
 				<div className="sidebar-kanban">
 					<FontAwesomeIcon icon={faBars} flip="vertical" size="lg" />
-					<h2>Kanban</h2>
+					<h2 className="heading">Kanban</h2>
 				</div>
 				<div className="sidebar-boards">
 					<span className="sidebar-boards-all">

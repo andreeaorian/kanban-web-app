@@ -85,7 +85,7 @@ export default function NewTaskPopup({ close }: { close: () => void }) {
 
 	return (
 		<>
-			<h2>Add new task</h2>
+			<h2 className="heading">Add new task</h2>
 			<form className="task-form">
 				<div className="task-title">
 					<label className="label-error" htmlFor="taskTitle">

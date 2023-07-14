@@ -33,7 +33,7 @@ export default function Header() {
 	return (
 		<>
 			<header className="header">
-				<h2 className="header-board-title">
+				<h2 className="heading header-board-title">
 					{!isSidebarVisible && (
 						<FontAwesomeIcon icon={faBars} flip="vertical" size="lg" />
 					)}
