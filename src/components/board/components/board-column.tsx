@@ -1,6 +1,6 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCircle } from "@fortawesome/free-solid-svg-icons";
-import Task, { SubTaskStatus } from "../../../models/task";
+import { Task } from "../../../models";
 import ColumnTask from "./column-task";
 
 type BoardColumnProps = {
@@ -21,19 +21,9 @@ export default function BoardColumn({
 				<span>{`${columnName} (${tasks.length})`}</span>
 			</div>
 			<div className="board-column-content">
-				{tasks.map((task) => {
-					return (
-						<ColumnTask
-							title={task.title}
-							subtasksNo={task.subtasks.length}
-							doneSubtasks={
-								task.subtasks.filter((x) => x.status === SubTaskStatus.Done)
-									.length
-							}
-							key={task.id}
-						/>
-					);
-				})}
+				{tasks.map((task) => (
+					<ColumnTask {...task} key={task.id} />
+				))}
 			</div>
 		</div>
 	);
