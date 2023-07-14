@@ -22,9 +22,18 @@ export default function NewBoardPopup({ close }: { close: () => void }) {
 
 	const dispatch = useDispatch();
 	const { validateBoard } = useBoardValidation();
+
 	const allColumnNames = useMemo(() => {
 		return board.columns.map((x) => x.title);
 	}, [board.columns]);
+	const isBoardNameInvalid = useMemo(
+		() => !!validationResult && !!validationResult.boardName,
+		[validationResult]
+	);
+	const areColumnsInvalid = useMemo(
+		() => !!validationResult && !!validationResult.columns,
+		[validationResult]
+	);
 
 	const addNewColumn = () => {
 		setIsNewColumnInputVisible(true);
@@ -42,7 +51,6 @@ export default function NewBoardPopup({ close }: { close: () => void }) {
 		e.preventDefault();
 		const validationResult = validateBoard(board);
 		setValidationResult(validationResult);
-		console.log(validationResult);
 
 		if (Object.keys(validationResult).length === 0) {
 			const boardId = generateId();
@@ -65,16 +73,12 @@ export default function NewBoardPopup({ close }: { close: () => void }) {
 				<div className="board-name">
 					<label className="label-error" htmlFor="boardName">
 						Board Name
-						{!!validationResult && !!validationResult["boardName"] && (
-							<span className="error">{validationResult["boardName"]}</span>
+						{isBoardNameInvalid && (
+							<span className="error">{validationResult?.boardName}</span>
 						)}
 					</label>
 					<input
-						className={
-							!!validationResult && !!validationResult["boardName"]
-								? "error"
-								: ""
-						}
+						className={isBoardNameInvalid ? "error" : ""}
 						name="boardName"
 						id="boardName"
 						placeholder="e.g. First Board"
@@ -84,8 +88,8 @@ export default function NewBoardPopup({ close }: { close: () => void }) {
 				<div className="board-column-list">
 					<div className="label-error">
 						Columns
-						{!!validationResult && !!validationResult["columns"] && (
-							<span className="error">{validationResult["columns"]}</span>
+						{areColumnsInvalid && (
+							<span className="error">{validationResult?.columns}</span>
 						)}
 					</div>
 					{board.columns.map((column) => (

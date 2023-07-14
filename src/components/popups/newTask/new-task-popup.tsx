@@ -29,9 +29,20 @@ export default function NewTaskPopup({ close }: { close: () => void }) {
 		useState<Record<string, string>>();
 	const dispatch = useDispatch();
 	const { validateTask } = useTaskValidation();
-	const allSubtasksTitles = useMemo(() => {
-		return newTask.subtasks.map((x) => x.title);
-	}, [newTask]);
+
+	const allSubtasksTitles = useMemo(
+		() => newTask.subtasks.map((x) => x.title),
+		[newTask]
+	);
+	const isTitleInvalid = useMemo(
+		() => !!validationResult && !!validationResult.taskTitle,
+		[validationResult]
+	);
+
+	const isDescriptionInvalid = useMemo(
+		() => !!validationResult && !!validationResult.taskDescription,
+		[validationResult]
+	);
 
 	useEffect(() => {
 		setSelectedStatus(selectedBoard?.columns[0].title!);
@@ -54,7 +65,6 @@ export default function NewTaskPopup({ close }: { close: () => void }) {
 		e.preventDefault();
 		const validationResult = validateTask(newTask);
 		setValidationResult(validationResult);
-		console.log(validationResult);
 
 		if (Object.keys(validationResult).length === 0) {
 			const taskId = generateId();
@@ -90,16 +100,12 @@ export default function NewTaskPopup({ close }: { close: () => void }) {
 				<div className="task-title">
 					<label className="label-error" htmlFor="taskTitle">
 						Title
-						{!!validationResult && !!validationResult["taskTitle"] && (
-							<span className="error">{validationResult["taskTitle"]}</span>
+						{isTitleInvalid && (
+							<span className="error">{validationResult?.taskTitle}</span>
 						)}
 					</label>
 					<input
-						className={
-							!!validationResult && !!validationResult["taskTitle"]
-								? "error"
-								: ""
-						}
+						className={isTitleInvalid ? "error" : ""}
 						name="taskTitle"
 						id="taskTitle"
 						placeholder="e.g. Take coffee break"
@@ -110,18 +116,12 @@ export default function NewTaskPopup({ close }: { close: () => void }) {
 				<div className="task-description">
 					<label className="label-error" htmlFor="taskDescription">
 						Title
-						{!!validationResult && !!validationResult["taskDescription"] && (
-							<span className="error">
-								{validationResult["taskDescription"]}
-							</span>
+						{isDescriptionInvalid && (
+							<span className="error">{validationResult?.taskDescription}</span>
 						)}
 					</label>
 					<textarea
-						className={
-							!!validationResult && !!validationResult["taskDescription"]
-								? "error"
-								: ""
-						}
+						className={isDescriptionInvalid ? "error" : ""}
 						name="taskDescription"
 						id="taskDescription"
 						placeholder="e.g. It's always good to take a break. This 15 break will recharge your batteries a little"
