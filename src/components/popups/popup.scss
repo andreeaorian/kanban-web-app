@@ -154,10 +154,13 @@
 				cursor: pointer;
 			}
 
-			.create-button {
-				&:disabled {
-					display: none;
-				}
+			.submit-button:disabled {
+				cursor: not-allowed;
+				opacity: 0.5;
+			}
+
+			.create-button:disabled {
+				display: none;
 			}
 		}
 	}

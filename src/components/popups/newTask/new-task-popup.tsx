@@ -178,7 +178,10 @@ export default function NewTaskPopup({ close }: { close: () => void }) {
 						</select>
 					</div>
 				</div>
-				<button className="submit-button" onClick={saveTask}>
+				<button
+					className="submit-button"
+					disabled={isNewSubtaskInputVisible}
+					onClick={saveTask}>
 					Create task
 				</button>
 			</form>
