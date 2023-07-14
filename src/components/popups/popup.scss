@@ -143,6 +143,22 @@
 					}
 				}
 			}
+
+			.submit-button,
+			.create-button {
+				height: 2.5rem;
+				width: 100%;
+				border-radius: 1.5rem;
+				border: 0.1rem solid;
+				font-weight: bold;
+				cursor: pointer;
+			}
+
+			.create-button {
+				&:disabled {
+					display: none;
+				}
+			}
 		}
 	}
 }
@@ -165,6 +181,18 @@
 
 				.actionable-value {
 					color: $white;
+				}
+
+				.submit-button {
+					background-color: $purplish_blue;
+					border-color: $purplish_blue;
+					color: $white;
+				}
+
+				.create-button {
+					background-color: $blueish_gray;
+					color: $purplish_blue;
+					border-color: $blueish_gray;
 				}
 			}
 		}
@@ -205,6 +233,18 @@
 					.actionable-value-icons {
 						color: $gray;
 					}
+				}
+
+				.create-button {
+					background-color: $blueish_gray;
+					color: $purplish_blue;
+					border-color: $blueish_gray;
+				}
+
+				.submit-button {
+					background-color: $purplish_blue;
+					border-color: $purplish_blue;
+					color: $white;
 				}
 			}
 		}

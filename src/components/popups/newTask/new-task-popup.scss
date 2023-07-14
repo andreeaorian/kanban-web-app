@@ -71,15 +71,6 @@
 				}
 			}
 		}
-
-		.new-task-button {
-			height: 2.5rem;
-			width: 100%;
-			border-radius: 1.5rem;
-			border: 0.1rem solid;
-			font-weight: bold;
-			cursor: pointer;
-		}
 	}
 
 	.task-status {
@@ -109,16 +100,6 @@
 	}
 }
 
-.task-button {
-	margin-top: 1rem;
-	width: 100%;
-	height: 2.5rem;
-	border-radius: 1.5rem;
-	border: 0.1rem solid;
-	font-weight: bold;
-	cursor: pointer;
-}
-
 .dark-theme {
 	.task-form {
 		input,
@@ -137,20 +118,6 @@
 				}
 			}
 		}
-
-		.task-subtasks {
-			.new-task-button {
-				background-color: $blueish_gray;
-				color: $purplish_blue;
-				border-color: $blueish_gray;
-			}
-		}
-	}
-
-	.task-button {
-		background-color: $purplish_blue;
-		color: $white;
-		border-color: $purplish_blue;
 	}
 }
 
@@ -175,18 +142,6 @@
 					color: $gray;
 				}
 			}
-
-			.new-task-button {
-				background-color: $blueish_gray;
-				color: $purplish_blue;
-				border-color: $blueish_gray;
-			}
 		}
-	}
-
-	.task-button {
-		background-color: $purplish_blue;
-		color: $white;
-		border-color: $purplish_blue;
 	}
 }

@@ -50,7 +50,8 @@ export default function NewTaskPopup({ close }: { close: () => void }) {
 		[dispatch]
 	);
 
-	const saveTask = () => {
+	const saveTask = (e: React.FormEvent<HTMLButtonElement>) => {
+		e.preventDefault();
 		const validationResult = validateTask(newTask);
 		setValidationResult(validationResult);
 		console.log(validationResult);
@@ -154,7 +155,7 @@ export default function NewTaskPopup({ close }: { close: () => void }) {
 					)}
 
 					<button
-						className="new-task-button"
+						className="create-button"
 						hidden={isNewSubtaskInputVisible}
 						onClick={addNewSubtask}>
 						Add new subtask
@@ -177,10 +178,10 @@ export default function NewTaskPopup({ close }: { close: () => void }) {
 						</select>
 					</div>
 				</div>
+				<button className="submit-button" onClick={saveTask}>
+					Create task
+				</button>
 			</form>
-			<button className="task-button" onClick={saveTask}>
-				Create task
-			</button>
 		</>
 	);
 }

@@ -38,7 +38,8 @@ export default function NewBoardPopup({ close }: { close: () => void }) {
 		[dispatch]
 	);
 
-	const saveBoard = () => {
+	const saveBoard = (e: React.FormEvent<HTMLButtonElement>) => {
+		e.preventDefault();
 		const validationResult = validateBoard(board);
 		setValidationResult(validationResult);
 		console.log(validationResult);
@@ -107,21 +108,21 @@ export default function NewBoardPopup({ close }: { close: () => void }) {
 						/>
 					)}
 				</div>
+				<div className="board-buttons">
+					<button
+						className="create-button"
+						onClick={addNewColumn}
+						disabled={isNewColumnInputVisible}>
+						Add new column
+					</button>
+					<button
+						className="submit-button"
+						disabled={isNewColumnInputVisible}
+						onClick={saveBoard}>
+						Create board
+					</button>
+				</div>
 			</form>
-			<div className="board-buttons">
-				<button
-					className="new-column-button"
-					onClick={addNewColumn}
-					disabled={isNewColumnInputVisible}>
-					Add new column
-				</button>
-				<button
-					className="submit"
-					disabled={isNewColumnInputVisible}
-					onClick={saveBoard}>
-					Create board
-				</button>
-			</div>
 		</>
 	);
 }
