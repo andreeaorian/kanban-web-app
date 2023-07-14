@@ -1,0 +1,156 @@
+@import "../../assets/variables.scss";
+
+.sidebar {
+	width: 18rem;
+	min-width: 12rem;
+	height: 100vh;
+	border-right: 0.1rem solid;
+	display: flex;
+	flex-direction: column;
+
+	.sidebar-kanban {
+		padding: 0.5rem;
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		gap: 0.3rem;
+
+		svg {
+			color: $purplish_blue;
+		}
+
+		.heading {
+			margin: 0.5rem;
+		}
+	}
+
+	.sidebar-boards {
+		display: flex;
+		flex-direction: column;
+
+		.sidebar-boards-all {
+			text-transform: uppercase;
+			font-weight: 500;
+			padding-bottom: 1rem;
+			padding-left: 2.5rem;
+		}
+
+		.sidebar-board-card {
+			display: flex;
+			justify-content: left;
+			align-items: center;
+			width: 90%;
+			gap: 0.8rem;
+			padding: 0.5rem 0;
+			font-weight: 600;
+			margin-right: 2rem;
+			padding-left: 2.5rem;
+			padding-right: 1rem;
+
+			&:hover {
+				cursor: pointer;
+			}
+
+			span {
+				white-space: nowrap;
+				overflow: hidden;
+				text-overflow: ellipsis;
+			}
+		}
+
+		.sidebar-board-card.selected {
+			background-color: $purplish_blue;
+			border: 0.1rem solid $purplish_blue;
+			border-bottom-right-radius: 1.5rem;
+			border-top-right-radius: 1.5rem;
+			color: $white;
+		}
+
+		.sidebar-new-board {
+			color: $purplish_blue;
+
+			&:hover {
+				cursor: pointer;
+			}
+		}
+	}
+
+	.sidebar-bottom {
+		margin-top: auto;
+		display: flex;
+		flex-direction: column;
+
+		.sidebar-hide-button {
+			display: flex;
+			align-items: center;
+			padding: 1rem 2rem;
+			gap: 0.5rem;
+			font-size: 0.75rem;
+			cursor: pointer;
+			color: $gray;
+		}
+	}
+}
+
+.dark-theme {
+	.sidebar {
+		background-color: $dark_gray;
+		border-color: $gray;
+		color: $white;
+
+		.sidebar-boards {
+			color: $gray;
+
+			.sidebar-new-board {
+				&:hover {
+					color: $white;
+				}
+			}
+		}
+	}
+}
+
+.sidebar.hidden {
+	display: none;
+}
+
+.light-theme {
+	.sidebar {
+		background-color: $white;
+		border-color: $blueish_gray;
+		color: $gray;
+
+		.sidebar-kanban {
+			.heading {
+				color: $black;
+			}
+		}
+
+		.sidebar-boards {
+			.sidebar-new-board {
+				&:hover {
+					color: $black;
+				}
+			}
+		}
+	}
+}
+
+@media screen and (min-width: 1024px) {
+	//Desktop
+}
+
+@media screen and (min-width: 768px) and (max-width: 1023px) {
+	//Tablet
+	.sidebar {
+		width: 15rem;
+	}
+}
+
+@media screen and (max-width: 767px) {
+	//Mobile
+
+	.sidebar {
+		display: none;
+	}
+}

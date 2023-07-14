@@ -1,0 +1,104 @@
+@import "../../assets/variables.scss";
+
+.board {
+	flex: 1;
+	height: 100vh;
+
+	.board-content {
+		display: flex;
+		gap: 1rem;
+
+		.board-column {
+			width: 35%;
+			min-width: 10rem;
+			height: 100%;
+
+			.board-column-header {
+				padding: 0.8rem;
+				display: flex;
+				gap: 0.5rem;
+				justify-content: left;
+				align-items: center;
+				font-weight: 500;
+			}
+
+			.board-column-content {
+				display: flex;
+				flex-direction: column;
+				gap: 1rem;
+				padding-left: 0.5rem;
+
+				.column-task {
+					border: 0.125rem solid;
+					border-radius: 1rem;
+					padding: 0.5rem 1rem;
+
+					.column-task-title {
+						font-size: 1rem;
+						font-weight: bold;
+					}
+
+					.column-task-info {
+						font-size: 0.75rem;
+						color: $gray;
+						padding: 0.25rem 0;
+					}
+				}
+			}
+		}
+	}
+}
+
+.dark-theme {
+	.board {
+		background-color: $dark_background;
+		color: $white;
+
+		.board-content {
+			.board-column {
+				.board-column-content {
+					.column-task {
+						background-color: $dark_gray;
+						border-color: $dark_gray;
+						box-shadow: 0.063rem 0.063rem 0.063rem $black;
+					}
+				}
+			}
+		}
+	}
+}
+
+.light-theme {
+	.board {
+		background-color: $light_background;
+		color: $gray;
+
+		.board-content {
+			.board-column {
+				.board-column-content {
+					.column-task {
+						background-color: $white;
+						border-color: $white;
+						box-shadow: 0.063rem 0.063rem 0.063rem $blueish_gray;
+
+						.column-task-title {
+							color: $black;
+						}
+					}
+				}
+			}
+		}
+	}
+}
+
+@media screen and (min-width: 1024px) {
+	//Desktop
+}
+
+@media screen and (min-width: 768px) and (max-width: 1023px) {
+	//Tablet
+}
+
+@media screen and (max-width: 767px) {
+	//Mobile
+}

@@ -1,0 +1,195 @@
+@import "../../assets/variables.scss";
+
+.popup-box {
+	background-color: rgba(0, 0, 0, 0.5);
+	position: fixed;
+	width: 100%;
+	height: 100vh;
+	top: 0;
+	left: 0;
+
+	.box {
+		position: relative;
+		margin: 0 auto;
+		height: auto;
+		border-radius: 0.25rem;
+		padding: 0.25rem;
+		overflow: auto;
+
+		.close {
+			float: right;
+
+			&:hover {
+				cursor: pointer;
+			}
+		}
+
+		.box-content {
+			padding: 1rem;
+
+			.label-error {
+				display: flex;
+				justify-content: space-between;
+				align-items: center;
+
+				.error {
+					color: $red_error;
+					font-size: 0.75rem;
+					font-weight: 600;
+				}
+			}
+
+			.actionable-value {
+				background-color: inherit;
+				height: 2rem;
+				display: flex;
+				gap: 1rem;
+
+				.actionable-value-details {
+					width: 100%;
+					border: 0.063rem solid $gray;
+					border-radius: 0.25rem;
+					padding: 0.25rem;
+
+					svg {
+						margin-right: 0.5rem;
+					}
+				}
+
+				.actionable-value-icons {
+					display: none;
+				}
+
+				&:hover {
+					.actionable-value-icons {
+						display: flex;
+						gap: 0.5rem;
+						justify-items: center;
+						align-items: center;
+						cursor: pointer;
+					}
+				}
+			}
+
+			.submit-button,
+			.create-button {
+				height: 2.5rem;
+				width: 100%;
+				border-radius: 1.5rem;
+				border: 0.1rem solid;
+				font-weight: bold;
+				cursor: pointer;
+			}
+
+			.submit-button:disabled {
+				cursor: not-allowed;
+				opacity: 0.5;
+			}
+
+			.create-button:disabled {
+				display: none;
+			}
+		}
+	}
+}
+
+.dark-theme {
+	.popup-box {
+		.box {
+			background-color: $dark_gray;
+			color: $white;
+			box-shadow: 0.125rem 0.125rem 0.25rem $black;
+
+			.box-content {
+				.actionable-value {
+					color: $white;
+				}
+
+				.submit-button {
+					background-color: $purplish_blue;
+					border-color: $purplish_blue;
+					color: $white;
+				}
+
+				.create-button {
+					background-color: $blueish_gray;
+					color: $purplish_blue;
+					border-color: $blueish_gray;
+				}
+			}
+		}
+	}
+}
+
+.light-theme {
+	.popup-box {
+		.box {
+			background-color: $white;
+			color: $dark_gray;
+			box-shadow: 0.125rem 0.125rem 0.25rem $gray;
+
+			.close {
+				color: $black;
+			}
+
+			.box-content {
+				.heading {
+					color: $black;
+				}
+
+				.actionable-value {
+					color: $black;
+
+					.actionable-value-icons {
+						color: $gray;
+					}
+				}
+
+				.create-button {
+					background-color: $blueish_gray;
+					color: $purplish_blue;
+					border-color: $blueish_gray;
+				}
+
+				.submit-button {
+					background-color: $purplish_blue;
+					border-color: $purplish_blue;
+					color: $white;
+				}
+			}
+		}
+	}
+}
+
+@media screen and (min-width: 1024px) {
+	//Desktop
+	.popup-box {
+		.box {
+			width: 30%;
+			max-height: calc(100vh - 4rem);
+			margin-top: calc(100vh - 85vh - 1.5rem);
+		}
+	}
+}
+
+@media screen and (min-width: 768px) and (max-width: 1023px) {
+	//Tablet
+	.popup-box {
+		.box {
+			width: 40%;
+			max-height: calc(100vh - 2rem);
+			margin-top: 1.5rem;
+		}
+	}
+}
+
+@media screen and (max-width: 767px) {
+	//Mobile
+	.popup-box {
+		.box {
+			width: 85%;
+			max-height: calc(100vh - 3rem);
+			margin-top: 1rem;
+		}
+	}
+}

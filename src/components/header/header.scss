@@ -1,0 +1,105 @@
+@import "../../assets/variables.scss";
+
+.header {
+	width: 100%;
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	padding: 0.5rem 1rem;
+	border-bottom: 0.1rem solid;
+
+	.header-board-title {
+		margin: 0.5rem;
+		padding: 0 0.5rem;
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		gap: 0.5rem;
+
+		svg {
+			color: $purplish_blue;
+		}
+	}
+
+	.header-new-task {
+		display: flex;
+		gap: 0.25rem;
+		justify-content: center;
+		align-items: center;
+		background-color: $purplish_blue;
+		border-radius: 1rem;
+		border: 0.1rem solid $purplish_blue;
+		height: 1.5rem;
+		color: $white;
+		padding: 0.25rem;
+	}
+}
+
+.dark-theme {
+	.header {
+		background-color: $dark_gray;
+		border-color: $gray;
+		color: $white;
+	}
+}
+
+.light-theme {
+	.header {
+		background-color: $white;
+		border-color: $blueish_gray;
+		color: $black;
+	}
+}
+
+@media screen and (min-width: 1024px) {
+	//Desktop
+}
+
+@media screen and (min-width: 768px) and (max-width: 1023px) {
+	//Tablet
+	.header {
+		.header-board-title {
+			max-width: 15rem;
+			white-space: nowrap;
+			overflow: hidden;
+			text-overflow: ellipsis;
+
+			svg {
+				width: 1.125rem;
+				height: 1.125rem;
+			}
+		}
+	}
+}
+
+@media screen and (max-width: 767px) {
+	//Mobile
+	.header {
+		.header-board-title {
+			max-width: 15rem;
+			white-space: nowrap;
+			overflow: hidden;
+			text-overflow: ellipsis;
+			font-size: 1.25rem;
+
+			svg {
+				width: 1.125rem;
+				height: 1.125rem;
+			}
+		}
+
+		.header-new-task {
+			font-size: 0.75rem;
+		}
+	}
+}
+
+@media screen and (max-width: 485px) {
+	.header {
+		.header-new-task {
+			span {
+				display: none;
+			}
+		}
+	}
+}
