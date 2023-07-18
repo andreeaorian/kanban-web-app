@@ -86,6 +86,17 @@ export const appSlice = createSlice({
 				}
 			});
 		},
+		changeTaskStatus: (state, action: PayloadAction<Task>) => {
+			state.boards.forEach((board) => {
+				if (board.id === action.payload.boardId) {
+					board.tasks.forEach((task) => {
+						if (task.title === action.payload.title) {
+							task.status = action.payload.status;
+						}
+					});
+				}
+			});
+		},
 		changeSidebarVisibility: (state) => {
 			state.showSidebar = !state.showSidebar;
 		},
@@ -104,6 +115,7 @@ export const {
 	addBoard,
 	selectBoard,
 	addTaskToBoard,
+	changeTaskStatus,
 	changeSidebarVisibility,
 	setNewBoardPopupVisibility,
 	setNewTaskPopupVisibility,
