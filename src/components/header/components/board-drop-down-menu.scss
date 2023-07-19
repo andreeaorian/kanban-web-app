@@ -1,0 +1,25 @@
+@import "../../../assets/variables.scss";
+
+.dropdown-menu {
+	position: absolute;
+	right: 1rem;
+	left: 83%;
+	top: 4rem;
+	z-index: 9999;
+	padding: 0.25rem 0;
+	border-radius: 0.5rem;
+	background-color: $dark_gray;
+	border: 1px solid $gray;
+	width: 8rem;
+
+	ul {
+		list-style-type: none;
+		margin: 0;
+		padding: 0.25rem;
+		padding-left: 1rem;
+
+		li {
+			cursor: pointer;
+		}
+	}
+}

@@ -9,9 +9,13 @@ import type { RootState } from "../../redux/store";
 import PopupWrapper from "../popups/popup-wrapper";
 import NewTaskPopup from "../popups/newTask/new-task-popup";
 import { resetTask } from "../../redux/taskReducer";
+import {
+	changeBoardMenuVisibility,
+	setNewTaskPopupVisibility,
+} from "../../redux/appReducer";
+import { BoardDropDownMenu } from "./components/board-drop-down-menu";
 
 import "./header.scss";
-import { setNewTaskPopupVisibility } from "../../redux/appReducer";
 
 export default function Header() {
 	const board = useSelector((state: RootState) =>
@@ -34,6 +38,10 @@ export default function Header() {
 		dispatch(resetTask());
 	};
 
+	const openMenu = () => {
+		dispatch(changeBoardMenuVisibility());
+	};
+
 	return (
 		<>
 			<header className="header">
@@ -53,8 +61,10 @@ export default function Header() {
 						icon={faEllipsisVertical}
 						size="lg"
 						className="header-menu"
+						onClick={openMenu}
 					/>
 				</div>
+				<BoardDropDownMenu />
 			</header>
 			<PopupWrapper
 				isVisible={isNewTaskPopupVisible}

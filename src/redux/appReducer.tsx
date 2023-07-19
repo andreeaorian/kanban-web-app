@@ -6,6 +6,7 @@ export interface App {
 	isDarkTheme: boolean;
 	isNewBoardPopupVisible: boolean;
 	isNewTaskPopupVisible: boolean;
+	isBoardMenuVisible: boolean;
 	showSidebar: boolean;
 	boards: Board[];
 }
@@ -15,6 +16,7 @@ const initialState: App = {
 	showSidebar: true,
 	isNewBoardPopupVisible: false,
 	isNewTaskPopupVisible: false,
+	isBoardMenuVisible: false,
 	boards: [
 		{
 			id: "2sD4f9jKpR",
@@ -100,6 +102,9 @@ export const appSlice = createSlice({
 		changeSidebarVisibility: (state) => {
 			state.showSidebar = !state.showSidebar;
 		},
+		changeBoardMenuVisibility: (state) => {
+			state.isBoardMenuVisible = !state.isBoardMenuVisible;
+		},
 		setNewBoardPopupVisibility: (state, action: PayloadAction<boolean>) => {
 			state.isNewBoardPopupVisible = action.payload;
 		},
@@ -117,6 +122,7 @@ export const {
 	addTaskToBoard,
 	changeTaskStatus,
 	changeSidebarVisibility,
+	changeBoardMenuVisibility,
 	setNewBoardPopupVisibility,
 	setNewTaskPopupVisibility,
 } = appSlice.actions;
