@@ -81,6 +81,10 @@ export const appSlice = createSlice({
 				}
 			});
 		},
+		deleteBoard: (state, action: PayloadAction<string>) => {
+			state.boards = state.boards.filter((b) => b.id !== action.payload);
+			state.boards[0].isSelected = true;
+		},
 		addTaskToBoard: (state, action: PayloadAction<Task>) => {
 			state.boards.forEach((board) => {
 				if (board.id === action.payload.boardId) {
@@ -120,6 +124,7 @@ export const {
 	addBoard,
 	selectBoard,
 	addTaskToBoard,
+	deleteBoard,
 	changeTaskStatus,
 	changeSidebarVisibility,
 	changeBoardMenuVisibility,
