@@ -1,6 +1,10 @@
 import { useDispatch, useSelector } from "react-redux";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faPlus, faBars } from "@fortawesome/free-solid-svg-icons";
+import {
+	faPlus,
+	faBars,
+	faEllipsisVertical,
+} from "@fortawesome/free-solid-svg-icons";
 import type { RootState } from "../../redux/store";
 import PopupWrapper from "../popups/popup-wrapper";
 import NewTaskPopup from "../popups/newTask/new-task-popup";
@@ -39,10 +43,18 @@ export default function Header() {
 					)}
 					<span>{board?.title}</span>
 				</h2>
-				<button className="header-new-task" onClick={openNewTaskPopup}>
-					<FontAwesomeIcon icon={faPlus} />
-					<span>Add new task</span>
-				</button>
+				<div className="header-buttons">
+					<button className="header-new-task" onClick={openNewTaskPopup}>
+						<FontAwesomeIcon icon={faPlus} />
+						<span>Add new task</span>
+					</button>
+
+					<FontAwesomeIcon
+						icon={faEllipsisVertical}
+						size="lg"
+						className="header-menu"
+					/>
+				</div>
 			</header>
 			<PopupWrapper
 				isVisible={isNewTaskPopupVisible}
