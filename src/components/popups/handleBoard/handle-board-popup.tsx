@@ -1,13 +1,21 @@
-import { useState, useMemo, useCallback, useReducer } from "react";
-import { useDispatch } from "react-redux";
+import {
+	useState,
+	useMemo,
+	useCallback,
+	useReducer,
+	useEffect,
+	Reducer,
+} from "react";
+import { useDispatch, useSelector } from "react-redux";
 import PopupListActionableValue from "../components/popup-list-actionable-value";
-import { addBoard } from "../../../redux/appReducer";
+import { addBoard, editBoard } from "../../../redux/appReducer";
 import { generateId } from "../../../utils/id-generator";
 import useBoardValidation from "../../../hooks/use-board-validator";
 import ActionableInput from "../components/actionable-input";
-import { Board } from "../../../models";
+import { Board, Column } from "../../../models";
 
 import "../form-content.scss";
+import { RootState } from "../../../redux/store";
 
 const initialBoard: Board = {
 	id: "",
@@ -21,11 +29,8 @@ const initialBoard: Board = {
 	isSelected: false,
 };
 
-interface BoardState {
-	board: Board;
-}
-
 enum BoardActionTypes {
+	SET_BOARD = "SET_BOARD",
 	CHANGE_TITLE = "CHANGE_TITLE",
 	ADD_COLUMN = "ADD_COLUMN",
 	DELETE_COLUMN = "DELETE_COLUMN",
@@ -33,16 +38,22 @@ enum BoardActionTypes {
 
 interface BoardAction {
 	type: BoardActionTypes;
-	payload: any;
+	payload: string | Column | Board;
 }
 
-function boardReducer(state: BoardState, action: BoardAction) {
+interface BoardState {
+	board: Board;
+}
+
+function boardReducer(state: BoardState, action: BoardAction): BoardState {
 	const { type, payload } = action;
 	switch (type) {
+		case BoardActionTypes.SET_BOARD:
+			return { ...state, board: payload as Board };
 		case BoardActionTypes.CHANGE_TITLE:
 			return {
 				...state,
-				board: { ...state.board, title: payload },
+				board: { ...state.board, title: payload as string },
 			};
 		case BoardActionTypes.DELETE_COLUMN:
 			return {
@@ -57,7 +68,7 @@ function boardReducer(state: BoardState, action: BoardAction) {
 				...state,
 				board: {
 					...state.board,
-					columns: [...state.board.columns, payload],
+					columns: [...state.board.columns, payload as Column],
 				},
 			};
 		default:
@@ -66,12 +77,20 @@ function boardReducer(state: BoardState, action: BoardAction) {
 }
 
 export default function HandleBoardPopup({ close }: { close: () => void }) {
-	const [boardState, reducerDispatch] = useReducer(boardReducer, {
+	const [boardState, reducerDispatch] = useReducer<
+		Reducer<BoardState, BoardAction>
+	>(boardReducer, {
 		board: initialBoard,
 	});
 	const [isNewColumnInputVisible, setIsNewColumnInputVisible] = useState(false);
 	const [validationResult, setValidationResult] =
 		useState<Record<string, string>>();
+	const isBoardInEdit = useSelector(
+		(state: RootState) => state.app.isBoardInEdit
+	);
+	const selectedBoard = useSelector((state: RootState) =>
+		state.app.boards.find((x) => x.isSelected)
+	);
 	const reduxDispatch = useDispatch();
 	const { validateBoard } = useBoardValidation();
 
@@ -86,6 +105,15 @@ export default function HandleBoardPopup({ close }: { close: () => void }) {
 		() => !!validationResult && !!validationResult.columns,
 		[validationResult]
 	);
+
+	useEffect(() => {
+		if (isBoardInEdit) {
+			reducerDispatch({
+				type: BoardActionTypes.SET_BOARD,
+				payload: { ...(selectedBoard as Board) },
+			});
+		}
+	}, [isBoardInEdit, selectedBoard]);
 
 	const addNewColumn = () => {
 		setIsNewColumnInputVisible(true);
@@ -105,8 +133,12 @@ export default function HandleBoardPopup({ close }: { close: () => void }) {
 		setValidationResult(validationResult);
 
 		if (Object.keys(validationResult).length === 0) {
-			const boardId = generateId();
-			reduxDispatch(addBoard({ ...boardState.board, id: boardId }));
+			if (isBoardInEdit) {
+				reduxDispatch(editBoard({ ...boardState.board }));
+			} else {
+				const boardId = generateId();
+				reduxDispatch(addBoard({ ...boardState.board, id: boardId }));
+			}
 			close();
 		}
 	};
@@ -124,7 +156,9 @@ export default function HandleBoardPopup({ close }: { close: () => void }) {
 
 	return (
 		<>
-			<h2 className="heading">Add new board</h2>
+			<h2 className="heading">
+				{isBoardInEdit ? "Edit board" : "Add new board"}
+			</h2>
 			<form className="form">
 				<div className="form-simple-item">
 					<label className="label-error" htmlFor="boardName">
@@ -149,7 +183,7 @@ export default function HandleBoardPopup({ close }: { close: () => void }) {
 							<span className="error">{validationResult?.columns}</span>
 						)}
 					</div>
-					{boardState.board.columns.map((column) => (
+					{boardState.board.columns.map((column: Column) => (
 						<PopupListActionableValue
 							title={column.title}
 							hasColor={true}
@@ -180,7 +214,7 @@ export default function HandleBoardPopup({ close }: { close: () => void }) {
 						className="submit-button"
 						disabled={isNewColumnInputVisible}
 						onClick={saveBoard}>
-						Create board
+						{isBoardInEdit ? "Save" : "Create board"}
 					</button>
 				</div>
 			</form>

@@ -10,10 +10,10 @@ import type { RootState } from "../../redux/store";
 import SidebarBoardCard from "./components/sidebar-board";
 import PopupWrapper from "../popups/popup-wrapper";
 import HandleBoardPopup from "../popups/handleBoard/handle-board-popup";
-import { resetBoard } from "../../redux/boardReducer";
 import {
 	changeSidebarVisibility,
-	setNewBoardPopupVisibility,
+	setBoardEditMode,
+	setBoardPopupVisibility,
 } from "../../redux/appReducer";
 import ThemeChanger from "./components/theme-changer";
 
@@ -25,17 +25,17 @@ export default function Sidebar() {
 		(state: RootState) => state.app.showSidebar
 	);
 	const isNewBoardPopupVisible = useSelector(
-		(state: RootState) => state.app.isNewBoardPopupVisible
+		(state: RootState) => state.app.isBoardPopupVisible
 	);
 	const dispatch = useDispatch();
 
 	const addNewBoad = () => {
-		dispatch(setNewBoardPopupVisibility(true));
+		dispatch(setBoardPopupVisibility(true));
 	};
 
 	const handleClosePopup = () => {
-		dispatch(setNewBoardPopupVisibility(false));
-		dispatch(resetBoard());
+		dispatch(setBoardPopupVisibility(false));
+		dispatch(setBoardEditMode(false));
 	};
 
 	const changeVisibility = () => dispatch(changeSidebarVisibility());

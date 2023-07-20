@@ -13,9 +13,9 @@ export default function useBoardValidation() {
 		if (isEmpty(board.title)) {
 			errors.boardName = "Name is required";
 		} else {
-			const boardNames = allBoards.map((x) => x.title);
+			const boardWithSameName = allBoards.find((x) => x.title === board.title);
 
-			if (boardNames.includes(board.title)) {
+			if (!!boardWithSameName && boardWithSameName.id !== board.id) {
 				errors.boardName = "The name should be unique";
 			}
 		}

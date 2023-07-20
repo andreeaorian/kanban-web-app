@@ -5,6 +5,8 @@ import useConfirm from "../../../hooks/use-confirm";
 import {
 	changeBoardMenuVisibility,
 	deleteBoard,
+	setBoardEditMode,
+	setBoardPopupVisibility,
 } from "../../../redux/appReducer";
 
 import "./board-drop-down-menu.scss";
@@ -36,12 +38,17 @@ export function BoardDropDownMenu() {
 		}
 	};
 
+	const handleEdit = () => {
+		dispatch(setBoardPopupVisibility(true));
+		dispatch(setBoardEditMode(true));
+	};
+
 	return (
 		<>
 			{isBoardMenuVisible && (
 				<nav ref={ref} className="dropdown-menu">
 					<ul>
-						<li>Edit board</li>
+						<li onClick={handleEdit}>Edit board</li>
 						<li onClick={handleDelete}>Delete board</li>
 					</ul>
 				</nav>
