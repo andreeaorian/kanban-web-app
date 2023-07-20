@@ -13,9 +13,9 @@ import { generateId } from "../../../utils/id-generator";
 import useBoardValidation from "../../../hooks/use-board-validator";
 import ActionableInput from "../components/actionable-input";
 import { Board, Column } from "../../../models";
+import { RootState } from "../../../redux/store";
 
 import "../form-content.scss";
-import { RootState } from "../../../redux/store";
 
 const initialBoard: Board = {
 	id: "",
@@ -33,6 +33,7 @@ enum BoardActionTypes {
 	SET_BOARD = "SET_BOARD",
 	CHANGE_TITLE = "CHANGE_TITLE",
 	ADD_COLUMN = "ADD_COLUMN",
+	EDIT_COLUMN = "EDIT_COLUMN",
 	DELETE_COLUMN = "DELETE_COLUMN",
 	MOVE_COLUMN = "MOVE_COLUMN",
 }
@@ -72,6 +73,20 @@ function boardReducer(state: BoardState, action: BoardAction): BoardState {
 					columns: [...state.board.columns, payload as Column],
 				},
 			};
+		case BoardActionTypes.EDIT_COLUMN: {
+			const modifiedColumns: Column[] = state.board.columns.map((column) => {
+				const payloadColumn = payload as Column;
+				return column.id === payloadColumn.id ? payloadColumn : column;
+			});
+
+			return {
+				...state,
+				board: {
+					...state.board,
+					columns: [...modifiedColumns],
+				},
+			};
+		}
 		case BoardActionTypes.MOVE_COLUMN:
 			return {
 				...state,
@@ -89,6 +104,7 @@ export default function HandleBoardPopup({ close }: { close: () => void }) {
 		board: initialBoard,
 	});
 	const [isNewColumnInputVisible, setIsNewColumnInputVisible] = useState(false);
+	const [editingColumnId, setEditingColumnId] = useState("");
 	const [validationResult, setValidationResult] =
 		useState<Record<string, string>>();
 	const isBoardInEdit = useSelector(
@@ -101,8 +117,18 @@ export default function HandleBoardPopup({ close }: { close: () => void }) {
 	const { validateBoard } = useBoardValidation();
 
 	const allColumnNames = useMemo(() => {
-		return boardState.board.columns.map((x) => x.title);
-	}, [boardState.board.columns]);
+		return boardState.board.columns.reduce(
+			(accumulator: string[], currentColumn: Column) => {
+				if (!!editingColumnId && editingColumnId === currentColumn.id) {
+					return accumulator;
+				}
+
+				accumulator.push(currentColumn.title);
+				return accumulator;
+			},
+			[]
+		);
+	}, [boardState.board.columns, editingColumnId]);
 	const isBoardNameInvalid = useMemo(
 		() => !!validationResult && !!validationResult.boardName,
 		[validationResult]
@@ -121,8 +147,12 @@ export default function HandleBoardPopup({ close }: { close: () => void }) {
 		}
 	}, [isBoardInEdit, selectedBoard]);
 
-	const addNewColumn = () => {
+	const addNewColumnHandler = () => {
 		setIsNewColumnInputVisible(true);
+	};
+
+	const editColumnHandler = (id: string) => {
+		setEditingColumnId(id);
 	};
 
 	const saveNewColumn = useCallback((title: string, color?: string) => {
@@ -133,6 +163,17 @@ export default function HandleBoardPopup({ close }: { close: () => void }) {
 		});
 		setIsNewColumnInputVisible(false);
 	}, []);
+
+	const saveEditColumn = useCallback(
+		(title: string, color?: string, id?: string) => {
+			reducerDispatch({
+				type: BoardActionTypes.EDIT_COLUMN,
+				payload: { id: id!, title: title, color: color! },
+			});
+			setEditingColumnId("");
+		},
+		[]
+	);
 
 	const saveBoard = (e: React.FormEvent<HTMLButtonElement>) => {
 		e.preventDefault();
@@ -159,7 +200,10 @@ export default function HandleBoardPopup({ close }: { close: () => void }) {
 	const deleteColumn = (id: string) =>
 		reducerDispatch({ type: BoardActionTypes.DELETE_COLUMN, payload: id });
 
-	const revertAddingNewColumn = () => setIsNewColumnInputVisible(false);
+	const revertChanges = () => {
+		setIsNewColumnInputVisible(false);
+		setEditingColumnId("");
+	};
 
 	const moveDraggedColumn = (dragIndex: number, hoverIndex: number) => {
 		const draggedColumn = boardState.board.columns[dragIndex];
@@ -205,18 +249,34 @@ export default function HandleBoardPopup({ close }: { close: () => void }) {
 							<span className="error">{validationResult?.columns}</span>
 						)}
 					</div>
-					{boardState.board.columns.map((column: Column, index: number) => (
-						<PopupListActionableValue
-							id={column.id}
-							title={column.title}
-							hasColor={true}
-							color={column.color}
-							key={column.id}
-							index={index}
-							moveListValueHandler={moveDraggedColumn}
-							deleteHandler={deleteColumn}
-						/>
-					))}
+					{boardState.board.columns.map((column: Column, index: number) => {
+						return editingColumnId === column.id ? (
+							<ActionableInput
+								id={editingColumnId}
+								inputNameValue={column.title}
+								inputColorValue={column.color}
+								inputName="newColumn"
+								inputPlaceholder="e.g. Testing"
+								hasColor={true}
+								similarNames={allColumnNames}
+								save={saveEditColumn}
+								revertChanges={revertChanges}
+								key={column.id}
+							/>
+						) : (
+							<PopupListActionableValue
+								id={column.id}
+								title={column.title}
+								hasColor={true}
+								color={column.color}
+								key={column.id}
+								index={index}
+								editHandler={editColumnHandler}
+								moveListValueHandler={moveDraggedColumn}
+								deleteHandler={deleteColumn}
+							/>
+						);
+					})}
 					{isNewColumnInputVisible && (
 						<ActionableInput
 							inputName="newColumn"
@@ -224,20 +284,20 @@ export default function HandleBoardPopup({ close }: { close: () => void }) {
 							hasColor={true}
 							similarNames={allColumnNames}
 							save={saveNewColumn}
-							revertChanges={revertAddingNewColumn}
+							revertChanges={revertChanges}
 						/>
 					)}
 				</div>
 				<div className="form-buttons">
 					<button
 						className="create-button"
-						onClick={addNewColumn}
+						onClick={addNewColumnHandler}
 						disabled={isNewColumnInputVisible}>
 						Add new column
 					</button>
 					<button
 						className="submit-button"
-						disabled={isNewColumnInputVisible}
+						disabled={isNewColumnInputVisible || !!editingColumnId}
 						onClick={saveBoard}>
 						{isBoardInEdit ? "Save" : "Create board"}
 					</button>

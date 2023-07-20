@@ -14,6 +14,7 @@ interface PopupListActionableValueProps {
 	title: string;
 	hasColor: boolean;
 	deleteHandler: (title: string) => void;
+	editHandler?: (id: string) => void;
 	color?: string;
 	index?: number;
 	moveListValueHandler?: (dragIndex: number, hoverIndex: number) => void;
@@ -24,6 +25,7 @@ export default function PopupListActionableValue({
 	title,
 	hasColor,
 	deleteHandler,
+	editHandler,
 	index,
 	moveListValueHandler,
 	color,
@@ -82,6 +84,12 @@ export default function PopupListActionableValue({
 		deleteHandler(id);
 	};
 
+	const handleEdit = () => {
+		if (!!editHandler) {
+			editHandler(id);
+		}
+	};
+
 	const opacity = isDragging ? 0 : 1;
 
 	drag(drop(ref));
@@ -93,7 +101,7 @@ export default function PopupListActionableValue({
 				<span>{title}</span>
 			</div>
 			<div className="actionable-value-icons">
-				<FontAwesomeIcon icon={faPenToSquare} />
+				<FontAwesomeIcon icon={faPenToSquare} onClick={handleEdit} />
 				<FontAwesomeIcon icon={faTrash} onClick={handleDelete} />
 			</div>
 		</div>

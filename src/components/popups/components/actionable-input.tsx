@@ -8,8 +8,11 @@ type ActionableInputProps = {
 	inputPlaceholder: string;
 	similarNames: string[];
 	hasColor: boolean;
-	save: (name: string, color?: string) => void;
+	save: (name: string, color?: string, id?: string) => void;
 	revertChanges: () => void;
+	id?: string;
+	inputNameValue?: string;
+	inputColorValue?: string;
 };
 export default function ActionableInput({
 	inputName,
@@ -18,6 +21,9 @@ export default function ActionableInput({
 	similarNames,
 	save,
 	revertChanges,
+	id,
+	inputNameValue,
+	inputColorValue,
 }: ActionableInputProps) {
 	const [name, setName] = useState("");
 	const [color, setColor] = useState("#000");
@@ -26,9 +32,16 @@ export default function ActionableInput({
 
 	useEffect(() => {
 		if (isSubmitted && isEmpty(error)) {
-			save(name, color);
+			save(name, color, id);
 		}
-	}, [isSubmitted, error, name, color, save]);
+	}, [isSubmitted, error, name, color, save, id]);
+
+	useEffect(() => {
+		if (!!inputNameValue && !!inputColorValue) {
+			setName(inputNameValue);
+			setColor(inputColorValue);
+		}
+	}, [inputNameValue, inputColorValue]);
 
 	const changeColor = (e: React.ChangeEvent<HTMLInputElement>): void => {
 		setColor(e.target.value);
@@ -65,6 +78,7 @@ export default function ActionableInput({
 			<div className="new-inputs">
 				<div className={`inputs ${!!error ? "error" : ""}`}>
 					<input
+						value={name}
 						name={inputName}
 						type="text"
 						placeholder={inputPlaceholder}
