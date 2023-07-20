@@ -34,11 +34,12 @@ enum BoardActionTypes {
 	CHANGE_TITLE = "CHANGE_TITLE",
 	ADD_COLUMN = "ADD_COLUMN",
 	DELETE_COLUMN = "DELETE_COLUMN",
+	MOVE_COLUMN = "MOVE_COLUMN",
 }
 
 interface BoardAction {
 	type: BoardActionTypes;
-	payload: string | Column | Board;
+	payload: string | Column | Board | Column[];
 }
 
 interface BoardState {
@@ -70,6 +71,11 @@ function boardReducer(state: BoardState, action: BoardAction): BoardState {
 					...state.board,
 					columns: [...state.board.columns, payload as Column],
 				},
+			};
+		case BoardActionTypes.MOVE_COLUMN:
+			return {
+				...state,
+				board: { ...state.board, columns: [...(payload as Column[])] },
 			};
 		default:
 			return state;
@@ -154,6 +160,21 @@ export default function HandleBoardPopup({ close }: { close: () => void }) {
 
 	const revertAddingNewColumn = () => setIsNewColumnInputVisible(false);
 
+	const moveDraggedColumn = (dragIndex: number, hoverIndex: number) => {
+		const draggedColumn = boardState.board.columns[dragIndex];
+
+		if (!!draggedColumn) {
+			const coppiedColumns = [...boardState.board.columns];
+			const prevColumns = coppiedColumns.splice(hoverIndex, 1, draggedColumn);
+			coppiedColumns.splice(dragIndex, 1, prevColumns[0]);
+
+			reducerDispatch({
+				type: BoardActionTypes.MOVE_COLUMN,
+				payload: coppiedColumns,
+			});
+		}
+	};
+
 	return (
 		<>
 			<h2 className="heading">
@@ -183,12 +204,14 @@ export default function HandleBoardPopup({ close }: { close: () => void }) {
 							<span className="error">{validationResult?.columns}</span>
 						)}
 					</div>
-					{boardState.board.columns.map((column: Column) => (
+					{boardState.board.columns.map((column: Column, index: number) => (
 						<PopupListActionableValue
 							title={column.title}
 							hasColor={true}
 							color={column.color}
 							key={column.title}
+							index={index}
+							moveListValueHandler={moveDraggedColumn}
 							deleteHandler={deleteColumn}
 						/>
 					))}
