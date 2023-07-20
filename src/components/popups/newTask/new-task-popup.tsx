@@ -134,6 +134,7 @@ export default function NewTaskPopup({ close }: { close: () => void }) {
 					{newTask.subtasks.length > 0 &&
 						newTask.subtasks.map(({ title }) => (
 							<PopupListActionableValue
+								id={title}
 								title={title}
 								hasColor={false}
 								key={title}

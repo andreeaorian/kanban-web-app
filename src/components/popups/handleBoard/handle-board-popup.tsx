@@ -21,9 +21,9 @@ const initialBoard: Board = {
 	id: "",
 	title: "",
 	columns: [
-		{ title: "To do", color: "#FF0000" },
-		{ title: "Doing", color: "#3CDFFF" },
-		{ title: "Done", color: "#008000" },
+		{ id: "uer2Z6PfeC", title: "To do", color: "#FF0000" },
+		{ id: "ybUYx87rz7", title: "Doing", color: "#3CDFFF" },
+		{ id: "prRggt7x55", title: "Done", color: "#008000" },
 	],
 	tasks: [],
 	isSelected: false,
@@ -61,7 +61,7 @@ function boardReducer(state: BoardState, action: BoardAction): BoardState {
 				...state,
 				board: {
 					...state.board,
-					columns: state.board.columns.filter((x) => x.title !== payload),
+					columns: state.board.columns.filter((x) => x.id !== payload),
 				},
 			};
 		case BoardActionTypes.ADD_COLUMN:
@@ -126,9 +126,10 @@ export default function HandleBoardPopup({ close }: { close: () => void }) {
 	};
 
 	const saveNewColumn = useCallback((title: string, color?: string) => {
+		const columnId = generateId();
 		reducerDispatch({
 			type: BoardActionTypes.ADD_COLUMN,
-			payload: { title: title, color: color! },
+			payload: { id: columnId, title: title, color: color! },
 		});
 		setIsNewColumnInputVisible(false);
 	}, []);
@@ -155,8 +156,8 @@ export default function HandleBoardPopup({ close }: { close: () => void }) {
 			payload: e.target.value,
 		});
 
-	const deleteColumn = (title: string) =>
-		reducerDispatch({ type: BoardActionTypes.DELETE_COLUMN, payload: title });
+	const deleteColumn = (id: string) =>
+		reducerDispatch({ type: BoardActionTypes.DELETE_COLUMN, payload: id });
 
 	const revertAddingNewColumn = () => setIsNewColumnInputVisible(false);
 
@@ -206,10 +207,11 @@ export default function HandleBoardPopup({ close }: { close: () => void }) {
 					</div>
 					{boardState.board.columns.map((column: Column, index: number) => (
 						<PopupListActionableValue
+							id={column.id}
 							title={column.title}
 							hasColor={true}
 							color={column.color}
-							key={column.title}
+							key={column.id}
 							index={index}
 							moveListValueHandler={moveDraggedColumn}
 							deleteHandler={deleteColumn}

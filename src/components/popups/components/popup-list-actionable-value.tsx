@@ -10,6 +10,7 @@ import {
 import { DraggableItemTypes } from "../../../utils/draggable-constants";
 
 interface PopupListActionableValueProps {
+	id: string;
 	title: string;
 	hasColor: boolean;
 	deleteHandler: (title: string) => void;
@@ -19,6 +20,7 @@ interface PopupListActionableValueProps {
 }
 
 export default function PopupListActionableValue({
+	id,
 	title,
 	hasColor,
 	deleteHandler,
@@ -77,7 +79,7 @@ export default function PopupListActionableValue({
 	});
 
 	const handleDelete = () => {
-		deleteHandler(title);
+		deleteHandler(id);
 	};
 
 	const opacity = isDragging ? 0 : 1;

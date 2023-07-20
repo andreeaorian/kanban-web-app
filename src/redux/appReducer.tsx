@@ -24,9 +24,9 @@ const initialState: App = {
 			id: "2sD4f9jKpR",
 			title: "First board",
 			columns: [
-				{ title: "TO DO", color: "#FF0000" },
-				{ title: "DOING", color: "#FF0000" },
-				{ title: "DONE", color: "#FF0000" },
+				{ id: "adf4f9jKJR", title: "TO DO", color: "#FF0000" },
+				{ id: "45D4f9jKpW", title: "DOING", color: "#FF0000" },
+				{ id: "98D4f9jPQZ", title: "DONE", color: "#FF0000" },
 			],
 			tasks: [
 				{
