@@ -4,8 +4,10 @@ import { Board, Task, SubTaskStatus } from "../models";
 
 export interface App {
 	isDarkTheme: boolean;
-	isNewBoardPopupVisible: boolean;
+	isBoardPopupVisible: boolean;
+	isBoardInEdit: boolean;
 	isNewTaskPopupVisible: boolean;
+	isBoardMenuVisible: boolean;
 	showSidebar: boolean;
 	boards: Board[];
 }
@@ -13,16 +15,18 @@ export interface App {
 const initialState: App = {
 	isDarkTheme: true,
 	showSidebar: true,
-	isNewBoardPopupVisible: false,
+	isBoardPopupVisible: false,
+	isBoardInEdit: false,
 	isNewTaskPopupVisible: false,
+	isBoardMenuVisible: false,
 	boards: [
 		{
 			id: "2sD4f9jKpR",
 			title: "First board",
 			columns: [
-				{ title: "TO DO", color: "#FF0000" },
-				{ title: "DOING", color: "#FF0000" },
-				{ title: "DONE", color: "#FF0000" },
+				{ id: "adf4f9jKJR", title: "TO DO", color: "#FF0000" },
+				{ id: "45D4f9jKpW", title: "DOING", color: "#FF0000" },
+				{ id: "98D4f9jPQZ", title: "DONE", color: "#FF0000" },
 			],
 			tasks: [
 				{
@@ -70,6 +74,15 @@ export const appSlice = createSlice({
 		addBoard: (state, action: PayloadAction<Board>) => {
 			state.boards.push(action.payload);
 		},
+		editBoard: (state, action: PayloadAction<Board>) => {
+			state.boards.forEach((board) => {
+				if (board.id === action.payload.id) {
+					board.title = action.payload.title;
+					board.columns = action.payload.columns;
+					return;
+				}
+			});
+		},
 		selectBoard: (state, action: PayloadAction<string>) => {
 			state.boards.forEach((board) => {
 				if (board.title === action.payload) {
@@ -79,6 +92,10 @@ export const appSlice = createSlice({
 				}
 			});
 		},
+		deleteBoard: (state, action: PayloadAction<string>) => {
+			state.boards = state.boards.filter((b) => b.id !== action.payload);
+			state.boards[0].isSelected = true;
+		},
 		addTaskToBoard: (state, action: PayloadAction<Task>) => {
 			state.boards.forEach((board) => {
 				if (board.id === action.payload.boardId) {
@@ -86,11 +103,28 @@ export const appSlice = createSlice({
 				}
 			});
 		},
+		changeTaskStatus: (state, action: PayloadAction<Task>) => {
+			state.boards.forEach((board) => {
+				if (board.id === action.payload.boardId) {
+					board.tasks.forEach((task) => {
+						if (task.title === action.payload.title) {
+							task.status = action.payload.status;
+						}
+					});
+				}
+			});
+		},
 		changeSidebarVisibility: (state) => {
 			state.showSidebar = !state.showSidebar;
 		},
-		setNewBoardPopupVisibility: (state, action: PayloadAction<boolean>) => {
-			state.isNewBoardPopupVisible = action.payload;
+		changeBoardMenuVisibility: (state) => {
+			state.isBoardMenuVisible = !state.isBoardMenuVisible;
+		},
+		setBoardPopupVisibility: (state, action: PayloadAction<boolean>) => {
+			state.isBoardPopupVisible = action.payload;
+		},
+		setBoardEditMode: (state, action: PayloadAction<boolean>) => {
+			state.isBoardInEdit = action.payload;
 		},
 		setNewTaskPopupVisibility: (state, action: PayloadAction<boolean>) => {
 			state.isNewTaskPopupVisible = action.payload;
@@ -102,10 +136,15 @@ export const appSlice = createSlice({
 export const {
 	changeTheme,
 	addBoard,
+	editBoard,
 	selectBoard,
 	addTaskToBoard,
+	deleteBoard,
+	changeTaskStatus,
 	changeSidebarVisibility,
-	setNewBoardPopupVisibility,
+	changeBoardMenuVisibility,
+	setBoardPopupVisibility,
+	setBoardEditMode,
 	setNewTaskPopupVisibility,
 } = appSlice.actions;
 

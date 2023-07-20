@@ -1,8 +1,9 @@
 import { useSelector } from "react-redux";
 import { RootState } from "../../redux/store";
-import Header from "../header/header";
-import "./board.scss";
 import BoardColumn from "./components/board-column";
+import Header from "../header/header";
+
+import "./board.scss";
 
 export default function Board() {
 	const selectedBoard = useSelector((state: RootState) =>

@@ -21,17 +21,25 @@
 		}
 	}
 
-	.header-new-task {
+	.header-buttons {
 		display: flex;
 		gap: 0.25rem;
 		justify-content: center;
 		align-items: center;
-		background-color: $purplish_blue;
-		border-radius: 1rem;
-		border: 0.1rem solid $purplish_blue;
-		height: 1.5rem;
-		color: $white;
-		padding: 0.25rem;
+
+		.header-new-task {
+			background-color: $purplish_blue;
+			border-radius: 1rem;
+			border: 0.1rem solid $purplish_blue;
+			height: 1.5rem;
+			color: $white;
+			padding: 0.25rem;
+		}
+
+		.header-menu {
+			padding-left: 1rem;
+			cursor: pointer;
+		}
 	}
 }
 
@@ -40,6 +48,10 @@
 		background-color: $dark_gray;
 		border-color: $gray;
 		color: $white;
+
+		.header-menu {
+			color: $gray;
+		}
 	}
 }
 
@@ -48,6 +60,10 @@
 		background-color: $white;
 		border-color: $blueish_gray;
 		color: $black;
+
+		.header-menu {
+			color: $black;
+		}
 	}
 }
 

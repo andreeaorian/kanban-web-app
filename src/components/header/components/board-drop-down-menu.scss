@@ -1,0 +1,52 @@
+@import "../../../assets/variables.scss";
+
+.dropdown-menu {
+	position: absolute;
+	right: 1rem;
+	top: 4rem;
+	z-index: 9999;
+	padding: 0.25rem 0;
+	border-radius: 0.5rem;
+	border: 0.063rem solid;
+	width: 8rem;
+
+	ul {
+		list-style-type: none;
+		margin: 0;
+		padding: 0;
+
+		li {
+			padding: 0.25rem;
+			padding-left: 1rem;
+			cursor: pointer;
+
+			&:hover {
+				font-weight: bold;
+			}
+		}
+	}
+}
+
+.dark-theme {
+	.dropdown-menu {
+		background-color: $dark_gray;
+		border-color: $gray;
+		color: $white;
+
+		li:hover {
+			background-color: rgba(0, 0, 0, 0.5);
+		}
+	}
+}
+
+.light-theme {
+	.dropdown-menu {
+		background-color: $white;
+		border-color: $blueish_gray;
+		color: $gray;
+
+		li:hover {
+			background-color: rgba(101, 94, 198, 0.3);
+		}
+	}
+}
