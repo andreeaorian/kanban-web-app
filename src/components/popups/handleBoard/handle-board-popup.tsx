@@ -1,31 +1,83 @@
-import { useState, useMemo, useCallback } from "react";
-import { useSelector, useDispatch } from "react-redux";
-import type { RootState } from "../../../redux/store";
+import { useState, useMemo, useCallback, useReducer } from "react";
+import { useDispatch } from "react-redux";
 import PopupListActionableValue from "../components/popup-list-actionable-value";
-import {
-	addColumn,
-	changeTitle,
-	deleteColumn,
-} from "../../../redux/boardReducer";
 import { addBoard } from "../../../redux/appReducer";
 import { generateId } from "../../../utils/id-generator";
 import useBoardValidation from "../../../hooks/use-board-validator";
 import ActionableInput from "../components/actionable-input";
+import { Board } from "../../../models";
 
 import "../form-content.scss";
 
-export default function NewBoardPopup({ close }: { close: () => void }) {
-	const board = useSelector((state: RootState) => state.board);
+const initialBoard: Board = {
+	id: "",
+	title: "",
+	columns: [
+		{ title: "To do", color: "#FF0000" },
+		{ title: "Doing", color: "#3CDFFF" },
+		{ title: "Done", color: "#008000" },
+	],
+	tasks: [],
+	isSelected: false,
+};
+
+interface BoardState {
+	board: Board;
+}
+
+enum BoardActionTypes {
+	CHANGE_TITLE = "CHANGE_TITLE",
+	ADD_COLUMN = "ADD_COLUMN",
+	DELETE_COLUMN = "DELETE_COLUMN",
+}
+
+interface BoardAction {
+	type: BoardActionTypes;
+	payload: any;
+}
+
+function boardReducer(state: BoardState, action: BoardAction) {
+	const { type, payload } = action;
+	switch (type) {
+		case BoardActionTypes.CHANGE_TITLE:
+			return {
+				...state,
+				board: { ...state.board, title: payload },
+			};
+		case BoardActionTypes.DELETE_COLUMN:
+			return {
+				...state,
+				board: {
+					...state.board,
+					columns: state.board.columns.filter((x) => x.title !== payload),
+				},
+			};
+		case BoardActionTypes.ADD_COLUMN:
+			return {
+				...state,
+				board: {
+					...state.board,
+					columns: [...state.board.columns, payload],
+				},
+			};
+		default:
+			return state;
+	}
+}
+
+export default function HandleBoardPopup({ close }: { close: () => void }) {
+	const [boardState, reducerDispatch] = useReducer(boardReducer, {
+		board: initialBoard,
+	});
 	const [isNewColumnInputVisible, setIsNewColumnInputVisible] = useState(false);
 	const [validationResult, setValidationResult] =
 		useState<Record<string, string>>();
-
-	const dispatch = useDispatch();
+	const reduxDispatch = useDispatch();
 	const { validateBoard } = useBoardValidation();
 
 	const allColumnNames = useMemo(() => {
-		return board.columns.map((x) => x.title);
-	}, [board.columns]);
+		return boardState.board.columns.map((x) => x.title);
+	}, [boardState.board.columns]);
 	const isBoardNameInvalid = useMemo(
 		() => !!validationResult && !!validationResult.boardName,
 		[validationResult]
@@ -39,30 +91,34 @@ export default function NewBoardPopup({ close }: { close: () => void }) {
 		setIsNewColumnInputVisible(true);
 	};
 
-	const saveColumn = useCallback(
-		(title: string, color?: string) => {
-			dispatch(addColumn({ title: title, color: color! }));
-			setIsNewColumnInputVisible(false);
-		},
-		[dispatch]
-	);
+	const saveNewColumn = useCallback((title: string, color?: string) => {
+		reducerDispatch({
+			type: BoardActionTypes.ADD_COLUMN,
+			payload: { title: title, color: color! },
+		});
+		setIsNewColumnInputVisible(false);
+	}, []);
 
 	const saveBoard = (e: React.FormEvent<HTMLButtonElement>) => {
 		e.preventDefault();
-		const validationResult = validateBoard(board);
+		const validationResult = validateBoard(boardState.board);
 		setValidationResult(validationResult);
 
 		if (Object.keys(validationResult).length === 0) {
 			const boardId = generateId();
-			dispatch(addBoard({ ...board, id: boardId }));
+			reduxDispatch(addBoard({ ...boardState.board, id: boardId }));
 			close();
 		}
 	};
 
 	const changeBoardTitle = (e: React.ChangeEvent<HTMLInputElement>) =>
-		dispatch(changeTitle(e.target.value));
+		reducerDispatch({
+			type: BoardActionTypes.CHANGE_TITLE,
+			payload: e.target.value,
+		});
 
-	const deleteValue = (title: string) => dispatch(deleteColumn(title));
+	const deleteColumn = (title: string) =>
+		reducerDispatch({ type: BoardActionTypes.DELETE_COLUMN, payload: title });
 
 	const revertAddingNewColumn = () => setIsNewColumnInputVisible(false);
 
@@ -82,6 +138,7 @@ export default function NewBoardPopup({ close }: { close: () => void }) {
 						name="boardName"
 						id="boardName"
 						placeholder="e.g. First Board"
+						value={boardState.board.title}
 						onChange={changeBoardTitle}
 					/>
 				</div>
@@ -92,13 +149,13 @@ export default function NewBoardPopup({ close }: { close: () => void }) {
 							<span className="error">{validationResult?.columns}</span>
 						)}
 					</div>
-					{board.columns.map((column) => (
+					{boardState.board.columns.map((column) => (
 						<PopupListActionableValue
 							title={column.title}
 							hasColor={true}
 							color={column.color}
 							key={column.title}
-							deleteHandler={deleteValue}
+							deleteHandler={deleteColumn}
 						/>
 					))}
 					{isNewColumnInputVisible && (
@@ -107,7 +164,7 @@ export default function NewBoardPopup({ close }: { close: () => void }) {
 							inputPlaceholder="e.g. Testing"
 							hasColor={true}
 							similarNames={allColumnNames}
-							save={saveColumn}
+							save={saveNewColumn}
 							revertChanges={revertAddingNewColumn}
 						/>
 					)}

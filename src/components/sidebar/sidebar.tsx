@@ -9,7 +9,7 @@ import {
 import type { RootState } from "../../redux/store";
 import SidebarBoardCard from "./components/sidebar-board";
 import PopupWrapper from "../popups/popup-wrapper";
-import NewBoardPopup from "../popups/newBoard/new-board-popup";
+import HandleBoardPopup from "../popups/handleBoard/handle-board-popup";
 import { resetBoard } from "../../redux/boardReducer";
 import {
 	changeSidebarVisibility,
@@ -76,7 +76,7 @@ export default function Sidebar() {
 			<PopupWrapper
 				isVisible={isNewBoardPopupVisible}
 				closePopup={handleClosePopup}>
-				<NewBoardPopup close={handleClosePopup} />
+				<HandleBoardPopup close={handleClosePopup} />
 			</PopupWrapper>
 		</>
 	);
