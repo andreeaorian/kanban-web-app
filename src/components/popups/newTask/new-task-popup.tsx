@@ -1,15 +1,15 @@
-import { useCallback, useEffect, useMemo, useState } from "react";
+import {
+	useCallback,
+	useEffect,
+	useMemo,
+	useState,
+	useReducer,
+	Reducer,
+} from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../../redux/store";
-import {
-	changeTitle,
-	changeDescription,
-	addSubtask,
-	deleteSubtask,
-	resetTask,
-} from "../../../redux/taskReducer";
 import { addTaskToBoard } from "../../../redux/appReducer";
-import { SubTaskStatus } from "../../../models";
+import { SubTask, SubTaskStatus, Task } from "../../../models";
 import { generateId } from "../../../utils/id-generator";
 import useTaskValidation from "../../../hooks/use-task-validator";
 import ActionableInput from "../components/actionable-input";
@@ -17,22 +17,115 @@ import PopupListActionableValue from "../components/popup-list-actionable-value"
 
 import "../form-content.scss";
 
+const initialTask: Task = {
+	id: "",
+	title: "",
+	description: "",
+	subtasks: [],
+	status: "",
+	boardId: "",
+};
+
+enum TaskActionTypes {
+	SET_TASK = "SET_TASK",
+	SET_BOARD_ID = "SET_BOARD_ID",
+	CHANGE_TITLE = "CHANGE_TITLE",
+	CHANGE_DESCRIPTION = "CHANGE_DESCRIPTION",
+	CHANGE_STATUS = "CHANGE_STATUS",
+	ADD_SUBTASK = "ADD_SUBTASK",
+	EDIT_SUBTASK = "EDIT_SUBTASK",
+	DELETE_SUBTASK = "DELETE_SUBTASK",
+}
+
+interface TaskAction {
+	type: TaskActionTypes;
+	payload: string | SubTask | Task;
+}
+
+interface TaskState {
+	task: Task;
+}
+
+function taskReducer(state: TaskState, action: TaskAction): TaskState {
+	const { type, payload } = action;
+	switch (type) {
+		case TaskActionTypes.SET_TASK:
+			return { ...state, task: payload as Task };
+		case TaskActionTypes.SET_BOARD_ID:
+			return {
+				...state,
+				task: { ...state.task, boardId: payload as string },
+			};
+		case TaskActionTypes.CHANGE_TITLE:
+			return {
+				...state,
+				task: { ...state.task, title: payload as string },
+			};
+		case TaskActionTypes.CHANGE_DESCRIPTION:
+			return {
+				...state,
+				task: { ...state.task, description: payload as string },
+			};
+		case TaskActionTypes.CHANGE_STATUS:
+			return {
+				...state,
+				task: { ...state.task, status: payload as string },
+			};
+		case TaskActionTypes.DELETE_SUBTASK:
+			return {
+				...state,
+				task: {
+					...state.task,
+					subtasks: state.task.subtasks.filter((x) => x.id !== payload),
+				},
+			};
+		case TaskActionTypes.ADD_SUBTASK:
+			return {
+				...state,
+				task: {
+					...state.task,
+					subtasks: [...state.task.subtasks, payload as SubTask],
+				},
+			};
+		case TaskActionTypes.EDIT_SUBTASK: {
+			const modifiedSubtasks: SubTask[] = state.task.subtasks.map((subtask) => {
+				const payloadSubtask = payload as SubTask;
+				return subtask.id === payloadSubtask.id ? payloadSubtask : subtask;
+			});
+
+			return {
+				...state,
+				task: {
+					...state.task,
+					subtasks: [...modifiedSubtasks],
+				},
+			};
+		}
+		default:
+			return state;
+	}
+}
+
 export default function NewTaskPopup({ close }: { close: () => void }) {
-	const newTask = useSelector((state: RootState) => state.task);
+	const [taskState, reducerDispatch] = useReducer<
+		Reducer<TaskState, TaskAction>
+	>(taskReducer, {
+		task: initialTask,
+	});
+
 	const selectedBoard = useSelector((state: RootState) =>
 		state.app.boards.find((x) => x.isSelected)
 	);
 	const [isNewSubtaskInputVisible, setIsNewSubtaskInputVisible] =
 		useState(false);
-	const [selectedStatus, setSelectedStatus] = useState("");
 	const [validationResult, setValidationResult] =
 		useState<Record<string, string>>();
-	const dispatch = useDispatch();
+	const reduxDispatch = useDispatch();
 	const { validateTask } = useTaskValidation();
 
 	const allSubtasksTitles = useMemo(
-		() => newTask.subtasks.map((x) => x.title),
-		[newTask]
+		() => taskState.task.subtasks.map((x) => x.title),
+		[taskState]
 	);
 	const isTitleInvalid = useMemo(
 		() => !!validationResult && !!validationResult.taskTitle,
@@ -45,7 +138,16 @@ export default function NewTaskPopup({ close }: { close: () => void }) {
 	);
 
 	useEffect(() => {
-		setSelectedStatus(selectedBoard?.columns[0].title!);
+		if (!!selectedBoard) {
+			reducerDispatch({
+				type: TaskActionTypes.CHANGE_STATUS,
+				payload: selectedBoard?.columns[0].title,
+			});
+			reducerDispatch({
+				type: TaskActionTypes.SET_BOARD_ID,
+				payload: selectedBoard?.id,
+			});
+		}
 	}, [selectedBoard]);
 
 	const addNewSubtask = (e: React.FormEvent<HTMLButtonElement>) => {
@@ -56,42 +158,56 @@ export default function NewTaskPopup({ close }: { close: () => void }) {
 	const saveSubtask = useCallback(
 		(name: string) => {
 			const id = generateId();
-			dispatch(addSubtask({ id: id, title: name, status: SubTaskStatus.Todo }));
+			reducerDispatch({
+				type: TaskActionTypes.ADD_SUBTASK,
+				payload: { id: id, title: name, status: SubTaskStatus.Todo },
+			});
 			setIsNewSubtaskInputVisible(false);
 		},
-		[dispatch]
+		[reducerDispatch]
 	);
 
 	const saveTask = (e: React.FormEvent<HTMLButtonElement>) => {
 		e.preventDefault();
-		const validationResult = validateTask(newTask);
+		const validationResult = validateTask(taskState.task);
 		setValidationResult(validationResult);
 
 		if (Object.keys(validationResult).length === 0) {
 			const taskId = generateId();
-			dispatch(
+			reduxDispatch(
 				addTaskToBoard({
-					...newTask,
-					status: selectedStatus!,
-					boardId: selectedBoard?.id!,
+					...taskState.task,
 					id: taskId,
 				})
 			);
-			dispatch(resetTask());
 			close();
 		}
 	};
 
 	const changeDescriptionHandler = (
 		e: React.ChangeEvent<HTMLTextAreaElement>
-	) => dispatch(changeDescription(e.target.value));
+	) =>
+		reducerDispatch({
+			type: TaskActionTypes.CHANGE_DESCRIPTION,
+			payload: e.target.value,
+		});
 
 	const revertCreatingSubtask = () => setIsNewSubtaskInputVisible(false);
 
 	const changeStatusValue = (e: React.ChangeEvent<HTMLSelectElement>) =>
-		setSelectedStatus(e.target.value);
+		reducerDispatch({
+			type: TaskActionTypes.CHANGE_STATUS,
+			payload: e.target.value,
+		});
 
-	const deleteSubtaskHandler = (id: string) => dispatch(deleteSubtask(id));
+	const deleteSubtaskHandler = (id: string) =>
+		reducerDispatch({ type: TaskActionTypes.DELETE_SUBTASK, payload: id });
+
+	const changeTitleHandler = (e: React.ChangeEvent<HTMLInputElement>) =>
+		reducerDispatch({
+			type: TaskActionTypes.CHANGE_TITLE,
+			payload: e.target.value,
+		});
 
 	return (
 		<>
@@ -109,7 +225,8 @@ export default function NewTaskPopup({ close }: { close: () => void }) {
 						name="taskTitle"
 						id="taskTitle"
 						placeholder="e.g. Take coffee break"
-						onChange={({ target }) => dispatch(changeTitle(target.value))}
+						value={taskState.task.title}
+						onChange={changeTitleHandler}
 					/>
 				</div>
 
@@ -131,8 +248,8 @@ export default function NewTaskPopup({ close }: { close: () => void }) {
 
 				<div className="form-list-item">
 					<div>Subtasks</div>
-					{newTask.subtasks.length > 0 &&
-						newTask.subtasks.map(({ title, id }) => (
+					{taskState.task.subtasks.length > 0 &&
+						taskState.task.subtasks.map(({ title, id }) => (
 							<PopupListActionableValue
 								id={id}
 								title={title}
@@ -166,7 +283,7 @@ export default function NewTaskPopup({ close }: { close: () => void }) {
 						<select
 							name="status"
 							id="status"
-							value={selectedStatus}
+							value={taskState.task.status}
 							onChange={changeStatusValue}>
 							{selectedBoard?.columns?.map(({ title }) => (
 								<option key={title} value={title}>
