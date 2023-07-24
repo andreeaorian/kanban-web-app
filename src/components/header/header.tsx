@@ -8,7 +8,6 @@ import {
 import type { RootState } from "../../redux/store";
 import PopupWrapper from "../popups/popup-wrapper";
 import NewTaskPopup from "../popups/newTask/new-task-popup";
-import { resetTask } from "../../redux/taskReducer";
 import {
 	changeBoardMenuVisibility,
 	setNewTaskPopupVisibility,
@@ -35,7 +34,6 @@ export default function Header() {
 
 	const closeNewTaskPopup = () => {
 		dispatch(setNewTaskPopupVisibility(false));
-		dispatch(resetTask());
 	};
 
 	const openMenu = () => {
