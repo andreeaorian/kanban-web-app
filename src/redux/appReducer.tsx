@@ -46,6 +46,7 @@ const initialState: App = {
 					status: "TO DO",
 					subtasks: [
 						{
+							id: "6Yp123nLrJ",
 							title: "This is the first subtask",
 							status: SubTaskStatus.Todo,
 						},

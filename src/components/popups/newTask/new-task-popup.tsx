@@ -55,7 +55,8 @@ export default function NewTaskPopup({ close }: { close: () => void }) {
 
 	const saveSubtask = useCallback(
 		(name: string) => {
-			dispatch(addSubtask({ title: name, status: SubTaskStatus.Todo }));
+			const id = generateId();
+			dispatch(addSubtask({ id: id, title: name, status: SubTaskStatus.Todo }));
 			setIsNewSubtaskInputVisible(false);
 		},
 		[dispatch]
@@ -90,8 +91,7 @@ export default function NewTaskPopup({ close }: { close: () => void }) {
 	const changeStatusValue = (e: React.ChangeEvent<HTMLSelectElement>) =>
 		setSelectedStatus(e.target.value);
 
-	const deleteSubtaskHandler = (title: string) =>
-		dispatch(deleteSubtask(title));
+	const deleteSubtaskHandler = (id: string) => dispatch(deleteSubtask(id));
 
 	return (
 		<>
@@ -132,12 +132,12 @@ export default function NewTaskPopup({ close }: { close: () => void }) {
 				<div className="form-list-item">
 					<div>Subtasks</div>
 					{newTask.subtasks.length > 0 &&
-						newTask.subtasks.map(({ title }) => (
+						newTask.subtasks.map(({ title, id }) => (
 							<PopupListActionableValue
-								id={title}
+								id={id}
 								title={title}
 								hasColor={false}
-								key={title}
+								key={id}
 								deleteHandler={deleteSubtaskHandler}
 							/>
 						))}

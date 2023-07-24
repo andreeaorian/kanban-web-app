@@ -29,7 +29,7 @@ export const taskSlice = createSlice({
 		},
 
 		deleteSubtask: (state, action: PayloadAction<string>) => {
-			state.subtasks = state.subtasks.filter((s) => s.title !== action.payload);
+			state.subtasks = state.subtasks.filter((s) => s.id !== action.payload);
 		},
 		resetTask: (state) => {
 			state.id = initialState.id;
