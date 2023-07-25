@@ -1,10 +1,16 @@
 import { useDrag, DragSourceMonitor } from "react-dnd";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { SubTaskStatus, Task } from "../../../models";
-import { changeTaskStatus } from "../../../redux/appReducer";
+import { changeTaskStatus, setTaskViewMode } from "../../../redux/appReducer";
+import { RootState } from "../../../redux/store";
 import { DraggableItemTypes } from "../../../utils/draggable-constants";
+import PopupWrapper from "../../popups/popup-wrapper";
+import ViewTask from "../../popups/viewTask/view-task";
 
 export default function ColumnTask(task: Task) {
+	const isTaskViewModeOpen = useSelector(
+		(state: RootState) => state.app.isTaskViewModeOpen
+	);
 	const dispatch = useDispatch();
 	const [{ isDragging }, drag] = useDrag({
 		type: DraggableItemTypes.TASK,
@@ -24,10 +30,25 @@ export default function ColumnTask(task: Task) {
 		(x) => x.status === SubTaskStatus.Done
 	).length;
 
+	const viewTask = () => {
+		dispatch(setTaskViewMode(true));
+	};
+
+	const closeTaskViewMode = () => dispatch(setTaskViewMode(false));
+
 	return (
-		<div ref={drag} className="column-task" style={{ opacity }}>
-			<div className="column-task-title">{task.title}</div>
-			<div className="column-task-info">{`${doneSubtasks} of ${task.subtasks.length} subtasks`}</div>
-		</div>
+		<>
+			<div ref={drag} className="column-task" style={{ opacity }}>
+				<div className="column-task-title" onClick={viewTask}>
+					{task.title}
+				</div>
+				<div className="column-task-info">{`${doneSubtasks} of ${task.subtasks.length} subtasks`}</div>
+			</div>
+			<PopupWrapper
+				isVisible={isTaskViewModeOpen}
+				closePopup={closeTaskViewMode}>
+				<ViewTask task={task} />
+			</PopupWrapper>
+		</>
 	);
 }

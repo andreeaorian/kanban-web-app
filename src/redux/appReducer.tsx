@@ -1,12 +1,13 @@
 import { createSlice } from "@reduxjs/toolkit";
 import type { PayloadAction } from "@reduxjs/toolkit";
-import { Board, Task, SubTaskStatus } from "../models";
+import { Board, Task, SubTaskStatus, SubTask } from "../models";
 
 export interface App {
 	isDarkTheme: boolean;
 	isBoardPopupVisible: boolean;
 	isBoardInEdit: boolean;
 	isNewTaskPopupVisible: boolean;
+	isTaskViewModeOpen: boolean;
 	isBoardMenuVisible: boolean;
 	showSidebar: boolean;
 	boards: Board[];
@@ -18,6 +19,7 @@ const initialState: App = {
 	isBoardPopupVisible: false,
 	isBoardInEdit: false,
 	isNewTaskPopupVisible: false,
+	isTaskViewModeOpen: false,
 	isBoardMenuVisible: false,
 	boards: [
 		{
@@ -49,6 +51,11 @@ const initialState: App = {
 							id: "6Yp123nLrJ",
 							title: "This is the first subtask",
 							status: SubTaskStatus.Todo,
+						},
+						{
+							id: "754123nLrJ",
+							title: "This is the second very very loooooong subtask - done",
+							status: SubTaskStatus.Done,
 						},
 					],
 				},
@@ -108,8 +115,26 @@ export const appSlice = createSlice({
 			state.boards.forEach((board) => {
 				if (board.id === action.payload.boardId) {
 					board.tasks.forEach((task) => {
-						if (task.title === action.payload.title) {
+						if (task.id === action.payload.id) {
 							task.status = action.payload.status;
+						}
+					});
+				}
+			});
+		},
+		changeSubtaskStatus: (
+			state,
+			action: PayloadAction<{ taskId: string; subtask: SubTask }>
+		) => {
+			state.boards.forEach((board) => {
+				if (board.isSelected) {
+					board.tasks.forEach((task) => {
+						if (task.id === action.payload.taskId) {
+							task.subtasks.forEach((subtask) => {
+								if (subtask.id === action.payload.subtask.id) {
+									subtask.status = action.payload.subtask.status;
+								}
+							});
 						}
 					});
 				}
@@ -130,6 +155,9 @@ export const appSlice = createSlice({
 		setNewTaskPopupVisibility: (state, action: PayloadAction<boolean>) => {
 			state.isNewTaskPopupVisible = action.payload;
 		},
+		setTaskViewMode: (state, action: PayloadAction<boolean>) => {
+			state.isTaskViewModeOpen = action.payload;
+		},
 	},
 });
 
@@ -142,11 +170,13 @@ export const {
 	addTaskToBoard,
 	deleteBoard,
 	changeTaskStatus,
+	changeSubtaskStatus,
 	changeSidebarVisibility,
 	changeBoardMenuVisibility,
 	setBoardPopupVisibility,
 	setBoardEditMode,
 	setNewTaskPopupVisibility,
+	setTaskViewMode,
 } = appSlice.actions;
 
 export default appSlice.reducer;

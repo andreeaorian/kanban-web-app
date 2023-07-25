@@ -1,6 +1,6 @@
 export enum SubTaskStatus {
-	Todo,
-	Done,
+	Todo = 0,
+	Done = 1,
 }
 
 export interface SubTask {
