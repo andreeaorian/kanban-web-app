@@ -7,7 +7,6 @@ import { SubTaskStatus, Task } from "../../../models";
 import DropDownMenu from "../../drop-down-menu/drop-down-menu";
 import {
 	changeSubtaskStatus,
-	changeTaskMenuVisibility,
 	changeTaskStatus,
 } from "../../../redux/appReducer";
 
@@ -16,6 +15,7 @@ import "./view-task.scss";
 
 export default function ViewTask({ task }: { task: Task }) {
 	const [taskState, setTaskState] = useState<Task>();
+	const [isTaskMenuVisible, setIsTaskMenuVisible] = useState(false);
 	const selectedBoard = useSelector((state: RootState) =>
 		state.app.boards.find((x) => x.isSelected)
 	);
@@ -44,7 +44,11 @@ export default function ViewTask({ task }: { task: Task }) {
 	};
 
 	const openMenu = () => {
-		dispatch(changeTaskMenuVisibility());
+		setIsTaskMenuVisible(true);
+	};
+
+	const closeMenu = () => {
+		setIsTaskMenuVisible(false);
 	};
 
 	return (
@@ -58,16 +62,19 @@ export default function ViewTask({ task }: { task: Task }) {
 				/>
 			</div>
 			<DropDownMenu
-				clickOutsideHandler={() => dispatch(changeTaskMenuVisibility())}
-				editHandler={() => console.log("task")}
-				deleteHandler={() => console.log("task")}
+				isVisible={isTaskMenuVisible}
+				clickOutsideHandler={closeMenu}
+				buttons={[
+					{ text: "Edit task", onClickHandler: () => console.log("task") },
+					{ text: "Delete task", onClickHandler: () => console.log("task") },
+				]}
 			/>
 			<div className="form">
 				<div className="form-list-item description">
 					{taskState?.description}
 				</div>
 
-				{taskState?.subtasks?.length! > 0 && (
+				{!!taskState?.subtasks && taskState.subtasks.length > 0 && (
 					<div className="form-list-item">
 						<div>
 							Subtasks (

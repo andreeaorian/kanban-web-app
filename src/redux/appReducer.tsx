@@ -8,8 +8,6 @@ export interface App {
 	isBoardInEdit: boolean;
 	isNewTaskPopupVisible: boolean;
 	isTaskViewModeOpen: boolean;
-	isBoardMenuVisible: boolean;
-	isTaskMenuVisible: boolean;
 	showSidebar: boolean;
 	boards: Board[];
 }
@@ -21,8 +19,6 @@ const initialState: App = {
 	isBoardInEdit: false,
 	isNewTaskPopupVisible: false,
 	isTaskViewModeOpen: false,
-	isBoardMenuVisible: false,
-	isTaskMenuVisible: false,
 	boards: [
 		{
 			id: "2sD4f9jKpR",
@@ -145,12 +141,6 @@ export const appSlice = createSlice({
 		changeSidebarVisibility: (state) => {
 			state.showSidebar = !state.showSidebar;
 		},
-		changeBoardMenuVisibility: (state) => {
-			state.isBoardMenuVisible = !state.isBoardMenuVisible;
-		},
-		changeTaskMenuVisibility: (state) => {
-			state.isTaskMenuVisible = !state.isTaskMenuVisible;
-		},
 		setBoardPopupVisibility: (state, action: PayloadAction<boolean>) => {
 			state.isBoardPopupVisible = action.payload;
 		},
@@ -177,8 +167,6 @@ export const {
 	changeTaskStatus,
 	changeSubtaskStatus,
 	changeSidebarVisibility,
-	changeBoardMenuVisibility,
-	changeTaskMenuVisibility,
 	setBoardPopupVisibility,
 	setBoardEditMode,
 	setNewTaskPopupVisibility,

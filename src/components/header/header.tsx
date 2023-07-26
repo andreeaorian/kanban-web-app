@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
@@ -9,7 +10,6 @@ import type { RootState } from "../../redux/store";
 import PopupWrapper from "../popups/popup-wrapper";
 import NewTaskPopup from "../popups/newTask/new-task-popup";
 import {
-	changeBoardMenuVisibility,
 	deleteBoard,
 	setBoardEditMode,
 	setBoardPopupVisibility,
@@ -21,6 +21,7 @@ import useConfirm from "../../hooks/use-confirm";
 import "./header.scss";
 
 export default function Header() {
+	const [isBoardMenuVisible, setIsBoardMenuVisible] = useState(false);
 	const board = useSelector((state: RootState) =>
 		state.app.boards.find((b) => b.isSelected)
 	);
@@ -30,9 +31,7 @@ export default function Header() {
 	const isNewTaskPopupVisible = useSelector(
 		(state: RootState) => state.app.isNewTaskPopupVisible
 	);
-	const isTaskMenuVisible = useSelector(
-		(state: RootState) => state.app.isTaskMenuVisible
-	);
+
 	const dispatch = useDispatch();
 	const [CustomConfirmDialog, confirm] = useConfirm(
 		"Delete confirmation",
@@ -48,15 +47,15 @@ export default function Header() {
 	};
 
 	const openMenu = () => {
-		dispatch(changeBoardMenuVisibility());
+		setIsBoardMenuVisible(true);
 	};
 
-	const handleClickOutsideDropDown = () => {
-		dispatch(changeBoardMenuVisibility());
+	const closeMenu = () => {
+		setIsBoardMenuVisible(false);
 	};
 
 	const handleDelete = async () => {
-		dispatch(changeBoardMenuVisibility());
+		closeMenu();
 		const ans = await confirm();
 		if (ans) {
 			dispatch(deleteBoard(board?.id!));
@@ -66,7 +65,7 @@ export default function Header() {
 	const handleEdit = () => {
 		dispatch(setBoardPopupVisibility(true));
 		dispatch(setBoardEditMode(true));
-		dispatch(changeBoardMenuVisibility());
+		closeMenu();
 	};
 
 	return (
@@ -91,13 +90,16 @@ export default function Header() {
 						onClick={openMenu}
 					/>
 				</div>
-				{!isTaskMenuVisible && (
-					<DropDownMenu
-						editHandler={handleEdit}
-						deleteHandler={handleDelete}
-						clickOutsideHandler={handleClickOutsideDropDown}
-					/>
-				)}
+
+				<DropDownMenu
+					isVisible={isBoardMenuVisible}
+					clickOutsideHandler={closeMenu}
+					buttons={[
+						{ text: "Edit board", onClickHandler: handleEdit },
+						{ text: "Delete board", onClickHandler: handleDelete },
+					]}
+				/>
+
 				<CustomConfirmDialog />
 			</header>
 			<PopupWrapper

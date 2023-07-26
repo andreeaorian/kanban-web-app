@@ -1,34 +1,33 @@
-import { useSelector } from "react-redux";
-import { RootState } from "../../redux/store";
 import { useOutsideClick } from "../../hooks/use-outside-click";
 
 import "./drop-down-menu.scss";
 
-export default function DropDownMenu({
-	editHandler,
-	deleteHandler,
-	clickOutsideHandler,
-}: {
-	editHandler: () => void;
-	deleteHandler: () => void;
+type DropDownMenuProps = {
+	isVisible: boolean;
 	clickOutsideHandler: () => void;
-}) {
-	const isBoardMenuVisible = useSelector(
-		(state: RootState) => state.app.isBoardMenuVisible
-	);
-	const isTaskMenuVisible = useSelector(
-		(state: RootState) => state.app.isTaskMenuVisible
-	);
+	buttons: {
+		text: string;
+		onClickHandler: () => void;
+	}[];
+};
+
+export default function DropDownMenu({
+	isVisible,
+	clickOutsideHandler,
+	buttons,
+}: DropDownMenuProps) {
 	const ref = useOutsideClick(clickOutsideHandler);
-	const entity = isBoardMenuVisible ? "board" : "task";
 
 	return (
 		<>
-			{(isBoardMenuVisible || isTaskMenuVisible) && (
+			{isVisible && (
 				<nav ref={ref} className="dropdown-menu">
 					<ul>
-						<li onClick={editHandler}>{`Edit ${entity}`}</li>
-						<li onClick={deleteHandler}>{`Delete ${entity}`}</li>
+						{buttons.map(({ text, onClickHandler }) => (
+							<li key={text} onClick={onClickHandler}>
+								{text}
+							</li>
+						))}
 					</ul>
 				</nav>
 			)}
