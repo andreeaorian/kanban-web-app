@@ -9,6 +9,8 @@ import {
 	changeSubtaskStatus,
 	changeTaskStatus,
 	deleteTask,
+	setTaskPopupVisibility,
+	setTaskEditMode,
 	setTaskViewMode,
 } from "../../../redux/appReducer";
 import useConfirm from "../../../hooks/use-confirm";
@@ -61,6 +63,12 @@ export default function ViewTask() {
 			dispatch(deleteTask(selectedTask!));
 			dispatch(setTaskViewMode(false));
 		}
+	};
+
+	const handleEdit = () => {
+		dispatch(setTaskPopupVisibility(true));
+		dispatch(setTaskEditMode(true));
+		dispatch(setTaskViewMode(false));
 	};
 
 	return (
@@ -131,7 +139,7 @@ export default function ViewTask() {
 				isVisible={isTaskMenuVisible}
 				clickOutsideHandler={closeMenu}
 				buttons={[
-					{ text: "Edit task", onClickHandler: () => console.log("task") },
+					{ text: "Edit task", onClickHandler: handleEdit },
 					{ text: "Delete task", onClickHandler: handleDelete },
 				]}
 			/>

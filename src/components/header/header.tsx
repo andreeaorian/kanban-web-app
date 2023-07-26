@@ -13,6 +13,7 @@ import {
 	deleteBoard,
 	setBoardEditMode,
 	setBoardPopupVisibility,
+	setTaskEditMode,
 	setTaskPopupVisibility,
 } from "../../redux/appReducer";
 import DropDownMenu from "../drop-down-menu/drop-down-menu";
@@ -42,8 +43,9 @@ export default function Header() {
 		dispatch(setTaskPopupVisibility(true));
 	};
 
-	const closeNewTaskPopup = () => {
+	const closeTaskPopup = () => {
 		dispatch(setTaskPopupVisibility(false));
+		dispatch(setTaskEditMode(false));
 	};
 
 	const openMenu = () => {
@@ -104,8 +106,8 @@ export default function Header() {
 			</header>
 			<PopupWrapper
 				isVisible={isNewTaskPopupVisible}
-				closePopup={closeNewTaskPopup}>
-				<HandleTaskPopup close={closeNewTaskPopup} />
+				closePopup={closeTaskPopup}>
+				<HandleTaskPopup close={closeTaskPopup} />
 			</PopupWrapper>
 		</>
 	);
