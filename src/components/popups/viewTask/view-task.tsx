@@ -4,8 +4,10 @@ import { RootState } from "../../../redux/store";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEllipsisVertical } from "@fortawesome/free-solid-svg-icons";
 import { SubTaskStatus, Task } from "../../../models";
+import DropDownMenu from "../../drop-down-menu/drop-down-menu";
 import {
 	changeSubtaskStatus,
+	changeTaskMenuVisibility,
 	changeTaskStatus,
 } from "../../../redux/appReducer";
 
@@ -41,12 +43,25 @@ export default function ViewTask({ task }: { task: Task }) {
 		);
 	};
 
+	const openMenu = () => {
+		dispatch(changeTaskMenuVisibility());
+	};
+
 	return (
 		<>
 			<div className="title">
 				<h2 className="heading">{taskState?.title}</h2>
-				<FontAwesomeIcon icon={faEllipsisVertical} size="lg" />
+				<FontAwesomeIcon
+					icon={faEllipsisVertical}
+					size="lg"
+					onClick={openMenu}
+				/>
 			</div>
+			<DropDownMenu
+				clickOutsideHandler={() => dispatch(changeTaskMenuVisibility())}
+				editHandler={() => console.log("task")}
+				deleteHandler={() => console.log("task")}
+			/>
 			<div className="form">
 				<div className="form-list-item description">
 					{taskState?.description}

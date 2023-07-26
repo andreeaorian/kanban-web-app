@@ -5,12 +5,10 @@ import { useOutsideClick } from "../../hooks/use-outside-click";
 import "./drop-down-menu.scss";
 
 export default function DropDownMenu({
-	isBoardMenu,
 	editHandler,
 	deleteHandler,
 	clickOutsideHandler,
 }: {
-	isBoardMenu: boolean;
 	editHandler: () => void;
 	deleteHandler: () => void;
 	clickOutsideHandler: () => void;
@@ -18,16 +16,19 @@ export default function DropDownMenu({
 	const isBoardMenuVisible = useSelector(
 		(state: RootState) => state.app.isBoardMenuVisible
 	);
-
+	const isTaskMenuVisible = useSelector(
+		(state: RootState) => state.app.isTaskMenuVisible
+	);
 	const ref = useOutsideClick(clickOutsideHandler);
+	const entity = isBoardMenuVisible ? "board" : "task";
 
 	return (
 		<>
-			{isBoardMenuVisible && isBoardMenu && (
+			{(isBoardMenuVisible || isTaskMenuVisible) && (
 				<nav ref={ref} className="dropdown-menu">
 					<ul>
-						<li onClick={editHandler}>Edit board</li>
-						<li onClick={deleteHandler}>Delete board</li>
+						<li onClick={editHandler}>{`Edit ${entity}`}</li>
+						<li onClick={deleteHandler}>{`Delete ${entity}`}</li>
 					</ul>
 				</nav>
 			)}

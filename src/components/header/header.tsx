@@ -30,6 +30,9 @@ export default function Header() {
 	const isNewTaskPopupVisible = useSelector(
 		(state: RootState) => state.app.isNewTaskPopupVisible
 	);
+	const isTaskMenuVisible = useSelector(
+		(state: RootState) => state.app.isTaskMenuVisible
+	);
 	const dispatch = useDispatch();
 	const [CustomConfirmDialog, confirm] = useConfirm(
 		"Delete confirmation",
@@ -88,12 +91,13 @@ export default function Header() {
 						onClick={openMenu}
 					/>
 				</div>
-				<DropDownMenu
-					isBoardMenu={true}
-					editHandler={handleEdit}
-					deleteHandler={handleDelete}
-					clickOutsideHandler={handleClickOutsideDropDown}
-				/>
+				{!isTaskMenuVisible && (
+					<DropDownMenu
+						editHandler={handleEdit}
+						deleteHandler={handleDelete}
+						clickOutsideHandler={handleClickOutsideDropDown}
+					/>
+				)}
 				<CustomConfirmDialog />
 			</header>
 			<PopupWrapper
