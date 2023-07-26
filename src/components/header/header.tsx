@@ -10,9 +10,13 @@ import PopupWrapper from "../popups/popup-wrapper";
 import NewTaskPopup from "../popups/newTask/new-task-popup";
 import {
 	changeBoardMenuVisibility,
+	deleteBoard,
+	setBoardEditMode,
+	setBoardPopupVisibility,
 	setNewTaskPopupVisibility,
 } from "../../redux/appReducer";
-import { BoardDropDownMenu } from "./components/board-drop-down-menu";
+import DropDownMenu from "../drop-down-menu/drop-down-menu";
+import useConfirm from "../../hooks/use-confirm";
 
 import "./header.scss";
 
@@ -27,6 +31,10 @@ export default function Header() {
 		(state: RootState) => state.app.isNewTaskPopupVisible
 	);
 	const dispatch = useDispatch();
+	const [CustomConfirmDialog, confirm] = useConfirm(
+		"Delete confirmation",
+		`Are you sure you want to delete board ${board?.title} and all its content?`
+	);
 
 	const openNewTaskPopup = () => {
 		dispatch(setNewTaskPopupVisibility(true));
@@ -37,6 +45,24 @@ export default function Header() {
 	};
 
 	const openMenu = () => {
+		dispatch(changeBoardMenuVisibility());
+	};
+
+	const handleClickOutsideDropDown = () => {
+		dispatch(changeBoardMenuVisibility());
+	};
+
+	const handleDelete = async () => {
+		dispatch(changeBoardMenuVisibility());
+		const ans = await confirm();
+		if (ans) {
+			dispatch(deleteBoard(board?.id!));
+		}
+	};
+
+	const handleEdit = () => {
+		dispatch(setBoardPopupVisibility(true));
+		dispatch(setBoardEditMode(true));
 		dispatch(changeBoardMenuVisibility());
 	};
 
@@ -62,7 +88,13 @@ export default function Header() {
 						onClick={openMenu}
 					/>
 				</div>
-				<BoardDropDownMenu />
+				<DropDownMenu
+					isBoardMenu={true}
+					editHandler={handleEdit}
+					deleteHandler={handleDelete}
+					clickOutsideHandler={handleClickOutsideDropDown}
+				/>
+				<CustomConfirmDialog />
 			</header>
 			<PopupWrapper
 				isVisible={isNewTaskPopupVisible}
