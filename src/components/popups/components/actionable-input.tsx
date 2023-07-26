@@ -8,7 +8,7 @@ type ActionableInputProps = {
 	inputPlaceholder: string;
 	similarNames: string[];
 	hasColor: boolean;
-	save: (name: string, color?: string, id?: string) => void;
+	save: (name: string, id?: string, color?: string) => void;
 	revertChanges: () => void;
 	id?: string;
 	inputNameValue?: string;
@@ -32,13 +32,15 @@ export default function ActionableInput({
 
 	useEffect(() => {
 		if (isSubmitted && isEmpty(error)) {
-			save(name, color, id);
+			save(name, id, color);
 		}
-	}, [isSubmitted, error, name, color, save, id]);
+	}, [isSubmitted, error, name, id, color, save]);
 
 	useEffect(() => {
-		if (!!inputNameValue && !!inputColorValue) {
+		if (!!inputNameValue) {
 			setName(inputNameValue);
+		}
+		if (!!inputColorValue) {
 			setColor(inputColorValue);
 		}
 	}, [inputNameValue, inputColorValue]);

@@ -155,17 +155,20 @@ export default function HandleBoardPopup({ close }: { close: () => void }) {
 		setEditingColumnId(id);
 	};
 
-	const saveNewColumn = useCallback((title: string, color?: string) => {
-		const columnId = generateId();
-		reducerDispatch({
-			type: BoardActionTypes.ADD_COLUMN,
-			payload: { id: columnId, title: title, color: color! },
-		});
-		setIsNewColumnInputVisible(false);
-	}, []);
+	const saveNewColumn = useCallback(
+		(title: string, id?: string, color?: string) => {
+			const columnId = generateId();
+			reducerDispatch({
+				type: BoardActionTypes.ADD_COLUMN,
+				payload: { id: columnId, title: title, color: color! },
+			});
+			setIsNewColumnInputVisible(false);
+		},
+		[]
+	);
 
 	const saveEditColumn = useCallback(
-		(title: string, color?: string, id?: string) => {
+		(title: string, id?: string, color?: string) => {
 			reducerDispatch({
 				type: BoardActionTypes.EDIT_COLUMN,
 				payload: { id: id!, title: title, color: color! },

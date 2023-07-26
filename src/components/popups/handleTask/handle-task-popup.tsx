@@ -123,6 +123,7 @@ export default function HandleTaskPopup({ close }: { close: () => void }) {
 	);
 	const [isNewSubtaskInputVisible, setIsNewSubtaskInputVisible] =
 		useState(false);
+	const [editingSubtaskId, setEditingSubtaskId] = useState("");
 	const [validationResult, setValidationResult] =
 		useState<Record<string, string>>();
 	const { validateTask } = useTaskValidation();
@@ -163,6 +164,22 @@ export default function HandleTaskPopup({ close }: { close: () => void }) {
 		e.preventDefault();
 		setIsNewSubtaskInputVisible(true);
 	};
+
+	const editSubtaskHandler = (id: string) => {
+		setEditingSubtaskId(id);
+	};
+
+	const saveEditSubtask = useCallback(
+		(title: string, id?: string) => {
+			const subtask = taskState?.task?.subtasks?.find((x) => x.id === id);
+			reducerDispatch({
+				type: TaskActionTypes.EDIT_SUBTASK,
+				payload: { id: id!, title: title, status: subtask?.status! },
+			});
+			setEditingSubtaskId("");
+		},
+		[taskState.task.subtasks]
+	);
 
 	const saveSubtask = useCallback(
 		(name: string) => {
@@ -205,7 +222,10 @@ export default function HandleTaskPopup({ close }: { close: () => void }) {
 			payload: e.target.value,
 		});
 
-	const revertCreatingSubtask = () => setIsNewSubtaskInputVisible(false);
+	const revertChanges = () => {
+		setIsNewSubtaskInputVisible(false);
+		setEditingSubtaskId("");
+	};
 
 	const changeStatusValue = (e: React.ChangeEvent<HTMLSelectElement>) =>
 		reducerDispatch({
@@ -263,15 +283,30 @@ export default function HandleTaskPopup({ close }: { close: () => void }) {
 				<div className="form-list-item">
 					<div>Subtasks</div>
 					{taskState.task.subtasks.length > 0 &&
-						taskState.task.subtasks.map(({ title, id }) => (
-							<PopupListActionableValue
-								id={id}
-								title={title}
-								hasColor={false}
-								key={id}
-								deleteHandler={deleteSubtaskHandler}
-							/>
-						))}
+						taskState.task.subtasks.map((subtask: SubTask) => {
+							return editingSubtaskId === subtask.id ? (
+								<ActionableInput
+									id={editingSubtaskId}
+									inputNameValue={subtask.title}
+									inputName="newColumn"
+									inputPlaceholder="e.g. Testing"
+									hasColor={false}
+									similarNames={allSubtasksTitles}
+									save={saveEditSubtask}
+									revertChanges={revertChanges}
+									key={subtask.id}
+								/>
+							) : (
+								<PopupListActionableValue
+									id={subtask.id}
+									title={subtask.title}
+									hasColor={false}
+									key={subtask.id}
+									editHandler={editSubtaskHandler}
+									deleteHandler={deleteSubtaskHandler}
+								/>
+							);
+						})}
 					{isNewSubtaskInputVisible && (
 						<ActionableInput
 							inputName="newSubtask"
@@ -279,7 +314,7 @@ export default function HandleTaskPopup({ close }: { close: () => void }) {
 							hasColor={false}
 							similarNames={allSubtasksTitles}
 							save={saveSubtask}
-							revertChanges={revertCreatingSubtask}
+							revertChanges={revertChanges}
 						/>
 					)}
 
