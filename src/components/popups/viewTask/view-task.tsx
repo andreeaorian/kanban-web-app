@@ -8,7 +8,10 @@ import DropDownMenu from "../../drop-down-menu/drop-down-menu";
 import {
 	changeSubtaskStatus,
 	changeTaskStatus,
+	deleteTask,
+	setTaskViewMode,
 } from "../../../redux/appReducer";
+import useConfirm from "../../../hooks/use-confirm";
 
 import "../form-content.scss";
 import "./view-task.scss";
@@ -22,6 +25,10 @@ export default function ViewTask() {
 		(state: RootState) => state.app.selectedTask
 	);
 	const dispatch = useDispatch();
+	const [CustomConfirmDialog, confirm] = useConfirm(
+		"Delete confirmation",
+		`Are you sure you want to delete task ${selectedTask?.title} and all its subtasks?`
+	);
 
 	const changeStatusValue = (e: React.ChangeEvent<HTMLSelectElement>) =>
 		dispatch(changeTaskStatus({ ...selectedTask!, status: e.target.value }));
@@ -47,6 +54,15 @@ export default function ViewTask() {
 		setIsTaskMenuVisible(false);
 	};
 
+	const handleDelete = async () => {
+		closeMenu();
+		const ans = await confirm();
+		if (ans) {
+			dispatch(deleteTask(selectedTask!));
+			dispatch(setTaskViewMode(false));
+		}
+	};
+
 	return (
 		<>
 			<div className="title">
@@ -57,14 +73,7 @@ export default function ViewTask() {
 					onClick={openMenu}
 				/>
 			</div>
-			<DropDownMenu
-				isVisible={isTaskMenuVisible}
-				clickOutsideHandler={closeMenu}
-				buttons={[
-					{ text: "Edit task", onClickHandler: () => console.log("task") },
-					{ text: "Delete task", onClickHandler: () => console.log("task") },
-				]}
-			/>
+
 			<div className="form">
 				<div className="form-list-item description">
 					{selectedTask?.description}
@@ -117,6 +126,16 @@ export default function ViewTask() {
 					</div>
 				</div>
 			</div>
+
+			<DropDownMenu
+				isVisible={isTaskMenuVisible}
+				clickOutsideHandler={closeMenu}
+				buttons={[
+					{ text: "Edit task", onClickHandler: () => console.log("task") },
+					{ text: "Delete task", onClickHandler: handleDelete },
+				]}
+			/>
+			<CustomConfirmDialog />
 		</>
 	);
 }

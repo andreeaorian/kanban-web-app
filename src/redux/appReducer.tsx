@@ -111,6 +111,17 @@ export const appSlice = createSlice({
 				}
 			});
 		},
+		deleteTask: (state, action: PayloadAction<Task>) => {
+			state.boards.forEach((board) => {
+				if (board.id === action.payload.boardId) {
+					board.tasks = board.tasks?.filter((t) => t.id !== action.payload.id);
+				}
+			});
+
+			if (state.selectedTask?.id === action.payload.id) {
+				state.selectedTask = null;
+			}
+		},
 		changeTaskStatus: (state, action: PayloadAction<Task>) => {
 			state.boards.forEach((board) => {
 				if (board.id === action.payload.boardId) {
@@ -168,6 +179,7 @@ export const {
 	editBoard,
 	selectBoard,
 	addTaskToBoard,
+	deleteTask,
 	deleteBoard,
 	changeTaskStatus,
 	changeSubtaskStatus,
