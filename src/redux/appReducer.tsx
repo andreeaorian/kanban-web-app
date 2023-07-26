@@ -145,6 +145,10 @@ export const appSlice = createSlice({
 					board.tasks.forEach((task) => {
 						if (task.id === action.payload.id) {
 							task.status = action.payload.status;
+
+							if (state.selectedTask?.id === task.id) {
+								state.selectedTask = task;
+							}
 						}
 					});
 				}
@@ -163,6 +167,10 @@ export const appSlice = createSlice({
 									subtask.status = action.payload.subtask.status;
 								}
 							});
+
+							if (state.selectedTask?.id === task.id) {
+								state.selectedTask = task;
+							}
 						}
 					});
 				}
