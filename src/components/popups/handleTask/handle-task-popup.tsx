@@ -8,7 +8,7 @@ import {
 } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../../redux/store";
-import { addTaskToBoard } from "../../../redux/appReducer";
+import { addTaskToBoard, editTask } from "../../../redux/appReducer";
 import { SubTask, SubTaskStatus, Task } from "../../../models";
 import { generateId } from "../../../utils/id-generator";
 import useTaskValidation from "../../../hooks/use-task-validator";
@@ -106,22 +106,27 @@ function taskReducer(state: TaskState, action: TaskAction): TaskState {
 	}
 }
 
-export default function NewTaskPopup({ close }: { close: () => void }) {
+export default function HandleTaskPopup({ close }: { close: () => void }) {
 	const [taskState, reducerDispatch] = useReducer<
 		Reducer<TaskState, TaskAction>
 	>(taskReducer, {
 		task: initialTask,
 	});
-
+	const isTaskInEdit = useSelector(
+		(state: RootState) => state.app.isTaskInEdit
+	);
 	const selectedBoard = useSelector((state: RootState) =>
 		state.app.boards.find((x) => x.isSelected)
+	);
+	const selectedTask = useSelector(
+		(state: RootState) => state.app.selectedTask
 	);
 	const [isNewSubtaskInputVisible, setIsNewSubtaskInputVisible] =
 		useState(false);
 	const [validationResult, setValidationResult] =
 		useState<Record<string, string>>();
-	const reduxDispatch = useDispatch();
 	const { validateTask } = useTaskValidation();
+	const reduxDispatch = useDispatch();
 
 	const allSubtasksTitles = useMemo(
 		() => taskState.task.subtasks.map((x) => x.title),
@@ -131,14 +136,18 @@ export default function NewTaskPopup({ close }: { close: () => void }) {
 		() => !!validationResult && !!validationResult.taskTitle,
 		[validationResult]
 	);
-
 	const isDescriptionInvalid = useMemo(
 		() => !!validationResult && !!validationResult.taskDescription,
 		[validationResult]
 	);
 
 	useEffect(() => {
-		if (!!selectedBoard) {
+		if (isTaskInEdit) {
+			reducerDispatch({
+				type: TaskActionTypes.SET_TASK,
+				payload: { ...(selectedTask as Task) },
+			});
+		} else if (!!selectedBoard) {
 			reducerDispatch({
 				type: TaskActionTypes.CHANGE_STATUS,
 				payload: selectedBoard?.columns[0].title,
@@ -148,7 +157,7 @@ export default function NewTaskPopup({ close }: { close: () => void }) {
 				payload: selectedBoard?.id,
 			});
 		}
-	}, [selectedBoard]);
+	}, [isTaskInEdit, selectedTask, selectedBoard]);
 
 	const addNewSubtask = (e: React.FormEvent<HTMLButtonElement>) => {
 		e.preventDefault();
@@ -173,13 +182,17 @@ export default function NewTaskPopup({ close }: { close: () => void }) {
 		setValidationResult(validationResult);
 
 		if (Object.keys(validationResult).length === 0) {
-			const taskId = generateId();
-			reduxDispatch(
-				addTaskToBoard({
-					...taskState.task,
-					id: taskId,
-				})
-			);
+			if (isTaskInEdit) {
+				reduxDispatch(editTask({ ...taskState.task }));
+			} else {
+				const taskId = generateId();
+				reduxDispatch(
+					addTaskToBoard({
+						...taskState.task,
+						id: taskId,
+					})
+				);
+			}
 			close();
 		}
 	};
@@ -232,7 +245,7 @@ export default function NewTaskPopup({ close }: { close: () => void }) {
 
 				<div className="form-simple-item">
 					<label className="label-error" htmlFor="taskDescription">
-						Title
+						Description
 						{isDescriptionInvalid && (
 							<span className="error">{validationResult?.taskDescription}</span>
 						)}
@@ -241,6 +254,7 @@ export default function NewTaskPopup({ close }: { close: () => void }) {
 						className={isDescriptionInvalid ? "error" : ""}
 						name="taskDescription"
 						id="taskDescription"
+						value={taskState.task.description}
 						placeholder="e.g. It's always good to take a break. This 15 break will recharge your batteries a little"
 						onChange={changeDescriptionHandler}
 					/>
@@ -299,7 +313,7 @@ export default function NewTaskPopup({ close }: { close: () => void }) {
 						className="submit-button"
 						disabled={isNewSubtaskInputVisible}
 						onClick={saveTask}>
-						Create task
+						{isTaskInEdit ? "Save" : "Create task"}
 					</button>
 				</div>
 			</form>

@@ -8,12 +8,12 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import type { RootState } from "../../redux/store";
 import PopupWrapper from "../popups/popup-wrapper";
-import NewTaskPopup from "../popups/newTask/new-task-popup";
+import HandleTaskPopup from "../popups/handleTask/handle-task-popup";
 import {
 	deleteBoard,
 	setBoardEditMode,
 	setBoardPopupVisibility,
-	setNewTaskPopupVisibility,
+	setTaskPopupVisibility,
 } from "../../redux/appReducer";
 import DropDownMenu from "../drop-down-menu/drop-down-menu";
 import useConfirm from "../../hooks/use-confirm";
@@ -29,7 +29,7 @@ export default function Header() {
 		(state: RootState) => state.app.showSidebar
 	);
 	const isNewTaskPopupVisible = useSelector(
-		(state: RootState) => state.app.isNewTaskPopupVisible
+		(state: RootState) => state.app.isTaskPopupVisible
 	);
 
 	const dispatch = useDispatch();
@@ -39,11 +39,11 @@ export default function Header() {
 	);
 
 	const openNewTaskPopup = () => {
-		dispatch(setNewTaskPopupVisibility(true));
+		dispatch(setTaskPopupVisibility(true));
 	};
 
 	const closeNewTaskPopup = () => {
-		dispatch(setNewTaskPopupVisibility(false));
+		dispatch(setTaskPopupVisibility(false));
 	};
 
 	const openMenu = () => {
@@ -105,7 +105,7 @@ export default function Header() {
 			<PopupWrapper
 				isVisible={isNewTaskPopupVisible}
 				closePopup={closeNewTaskPopup}>
-				<NewTaskPopup close={closeNewTaskPopup} />
+				<HandleTaskPopup close={closeNewTaskPopup} />
 			</PopupWrapper>
 		</>
 	);

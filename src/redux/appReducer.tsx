@@ -6,7 +6,8 @@ export interface App {
 	isDarkTheme: boolean;
 	isBoardPopupVisible: boolean;
 	isBoardInEdit: boolean;
-	isNewTaskPopupVisible: boolean;
+	isTaskInEdit: boolean;
+	isTaskPopupVisible: boolean;
 	isTaskViewModeOpen: boolean;
 	showSidebar: boolean;
 	boards: Board[];
@@ -18,7 +19,8 @@ const initialState: App = {
 	showSidebar: true,
 	isBoardPopupVisible: false,
 	isBoardInEdit: false,
-	isNewTaskPopupVisible: false,
+	isTaskInEdit: false,
+	isTaskPopupVisible: false,
 	isTaskViewModeOpen: false,
 	boards: [
 		{
@@ -91,6 +93,21 @@ export const appSlice = createSlice({
 				}
 			});
 		},
+		editTask: (state, action: PayloadAction<Task>) => {
+			state.boards.forEach((board) => {
+				if (board.id === action.payload.boardId) {
+					board.tasks.forEach((task) => {
+						if (task.id === action.payload.id) {
+							task.title = action.payload.title;
+							task.description = action.payload.description;
+							task.status = action.payload.status;
+							task.subtasks = [...action.payload.subtasks];
+							return;
+						}
+					});
+				}
+			});
+		},
 		selectBoard: (state, action: PayloadAction<string>) => {
 			state.boards.forEach((board) => {
 				if (board.title === action.payload) {
@@ -160,8 +177,11 @@ export const appSlice = createSlice({
 		setBoardEditMode: (state, action: PayloadAction<boolean>) => {
 			state.isBoardInEdit = action.payload;
 		},
-		setNewTaskPopupVisibility: (state, action: PayloadAction<boolean>) => {
-			state.isNewTaskPopupVisible = action.payload;
+		setTaskEditMode: (state, action: PayloadAction<boolean>) => {
+			state.isTaskInEdit = action.payload;
+		},
+		setTaskPopupVisibility: (state, action: PayloadAction<boolean>) => {
+			state.isTaskPopupVisible = action.payload;
 		},
 		setTaskViewMode: (state, action: PayloadAction<boolean>) => {
 			state.isTaskViewModeOpen = action.payload;
@@ -177,6 +197,7 @@ export const {
 	changeTheme,
 	addBoard,
 	editBoard,
+	editTask,
 	selectBoard,
 	addTaskToBoard,
 	deleteTask,
@@ -186,7 +207,8 @@ export const {
 	changeSidebarVisibility,
 	setBoardPopupVisibility,
 	setBoardEditMode,
-	setNewTaskPopupVisibility,
+	setTaskEditMode,
+	setTaskPopupVisibility,
 	setTaskViewMode,
 	setSelectedTask,
 } = appSlice.actions;
