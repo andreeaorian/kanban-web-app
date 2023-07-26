@@ -1,9 +1,9 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../../redux/store";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEllipsisVertical } from "@fortawesome/free-solid-svg-icons";
-import { SubTaskStatus, Task } from "../../../models";
+import { SubTaskStatus } from "../../../models";
 import DropDownMenu from "../../drop-down-menu/drop-down-menu";
 import {
 	changeSubtaskStatus,
@@ -13,22 +13,18 @@ import {
 import "../form-content.scss";
 import "./view-task.scss";
 
-export default function ViewTask({ task }: { task: Task }) {
-	const [taskState, setTaskState] = useState<Task>();
+export default function ViewTask() {
 	const [isTaskMenuVisible, setIsTaskMenuVisible] = useState(false);
 	const selectedBoard = useSelector((state: RootState) =>
 		state.app.boards.find((x) => x.isSelected)
 	);
+	const selectedTask = useSelector(
+		(state: RootState) => state.app.selectedTask
+	);
 	const dispatch = useDispatch();
 
-	useEffect(() => {
-		if (!!task) {
-			setTaskState(task);
-		}
-	}, [task]);
-
 	const changeStatusValue = (e: React.ChangeEvent<HTMLSelectElement>) =>
-		dispatch(changeTaskStatus({ ...taskState!, status: e.target.value }));
+		dispatch(changeTaskStatus({ ...selectedTask!, status: e.target.value }));
 
 	const changeSubtaskStatusValue = (
 		e: React.ChangeEvent<HTMLInputElement>,
@@ -37,7 +33,7 @@ export default function ViewTask({ task }: { task: Task }) {
 	) => {
 		dispatch(
 			changeSubtaskStatus({
-				taskId: taskState?.id!,
+				taskId: selectedTask?.id!,
 				subtask: { title, id, status: Number(e.target.checked) },
 			})
 		);
@@ -54,7 +50,7 @@ export default function ViewTask({ task }: { task: Task }) {
 	return (
 		<>
 			<div className="title">
-				<h2 className="heading">{taskState?.title}</h2>
+				<h2 className="heading">{selectedTask?.title}</h2>
 				<FontAwesomeIcon
 					icon={faEllipsisVertical}
 					size="lg"
@@ -71,22 +67,22 @@ export default function ViewTask({ task }: { task: Task }) {
 			/>
 			<div className="form">
 				<div className="form-list-item description">
-					{taskState?.description}
+					{selectedTask?.description}
 				</div>
 
-				{!!taskState?.subtasks && taskState.subtasks.length > 0 && (
+				{!!selectedTask?.subtasks && selectedTask.subtasks.length > 0 && (
 					<div className="form-list-item">
 						<div>
 							Subtasks (
 							{`${
-								taskState?.subtasks.filter(
+								selectedTask?.subtasks.filter(
 									(x) => x.status === SubTaskStatus.Done
 								).length
-							} of ${taskState?.subtasks.length}`}
+							} of ${selectedTask?.subtasks.length}`}
 							)
 						</div>
 
-						{taskState?.subtasks.map(({ title, id, status }) => (
+						{selectedTask?.subtasks.map(({ title, id, status }) => (
 							<div
 								key={id}
 								className={`subtask ${
@@ -110,7 +106,7 @@ export default function ViewTask({ task }: { task: Task }) {
 						<select
 							name="status"
 							id="status"
-							value={taskState?.status}
+							value={selectedTask?.status}
 							onChange={changeStatusValue}>
 							{selectedBoard?.columns?.map(({ title }) => (
 								<option key={title} value={title}>

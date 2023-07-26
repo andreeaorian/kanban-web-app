@@ -10,6 +10,7 @@ export interface App {
 	isTaskViewModeOpen: boolean;
 	showSidebar: boolean;
 	boards: Board[];
+	selectedTask: Task | null;
 }
 
 const initialState: App = {
@@ -68,6 +69,7 @@ const initialState: App = {
 			isSelected: false,
 		},
 	],
+	selectedTask: null,
 };
 
 export const appSlice = createSlice({
@@ -153,6 +155,9 @@ export const appSlice = createSlice({
 		setTaskViewMode: (state, action: PayloadAction<boolean>) => {
 			state.isTaskViewModeOpen = action.payload;
 		},
+		setSelectedTask: (state, action: PayloadAction<Task>) => {
+			state.selectedTask = action.payload;
+		},
 	},
 });
 
@@ -171,6 +176,7 @@ export const {
 	setBoardEditMode,
 	setNewTaskPopupVisibility,
 	setTaskViewMode,
+	setSelectedTask,
 } = appSlice.actions;
 
 export default appSlice.reducer;
