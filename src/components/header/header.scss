@@ -36,6 +36,15 @@
 		}
 	}
 
+	.header-arrow-buttons {
+		color: $purplish_blue;
+		flex-grow: 4;
+
+		svg {
+			float: left;
+		}
+	}
+
 	.header-buttons {
 		display: flex;
 		gap: 0.25rem;

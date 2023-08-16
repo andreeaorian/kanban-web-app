@@ -1,5 +1,12 @@
 @import "../../assets/variables.scss";
 
+@mixin responsiveSidebar {
+	width: 15rem;
+	height: calc(100vh - 3.75rem);
+	position: absolute;
+	top: 3.75rem;
+}
+
 .sidebar {
 	width: 18rem;
 	min-width: 12rem;
@@ -25,6 +32,7 @@
 	}
 
 	.sidebar-boards {
+		margin-top: 1rem;
 		display: flex;
 		flex-direction: column;
 
@@ -77,6 +85,7 @@
 
 	.sidebar-bottom {
 		margin-top: auto;
+		margin-bottom: 1rem;
 		display: flex;
 		flex-direction: column;
 
@@ -143,7 +152,7 @@
 @media screen and (min-width: 768px) and (max-width: 1023px) {
 	//Tablet
 	.sidebar {
-		width: 15rem;
+		@include responsiveSidebar();
 	}
 }
 
@@ -151,6 +160,6 @@
 	//Mobile
 
 	.sidebar {
-		display: none;
+		@include responsiveSidebar();
 	}
 }

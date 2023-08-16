@@ -18,6 +18,7 @@ import {
 import ThemeChanger from "./components/theme-changer";
 
 import "./sidebar.scss";
+import useDisplaySize from "../../hooks/use-display-size";
 
 export default function Sidebar() {
 	const boards = useSelector((state: RootState) => state.app.boards);
@@ -28,6 +29,7 @@ export default function Sidebar() {
 		(state: RootState) => state.app.isBoardPopupVisible
 	);
 	const dispatch = useDispatch();
+	const isDesktop = useDisplaySize();
 
 	const addNewBoad = () => {
 		dispatch(setBoardPopupVisibility(true));
@@ -43,10 +45,12 @@ export default function Sidebar() {
 	return (
 		<>
 			<div className={`sidebar ${isSidebarVisible ? "" : "hidden"}`}>
-				<div className="sidebar-kanban">
-					<FontAwesomeIcon icon={faBars} flip="vertical" size="lg" />
-					<h2 className="heading">Kanban</h2>
-				</div>
+				{isDesktop && (
+					<div className="sidebar-kanban">
+						<FontAwesomeIcon icon={faBars} flip="vertical" size="lg" />
+						<h2 className="heading">Kanban</h2>
+					</div>
+				)}
 				<div className="sidebar-boards">
 					<span className="sidebar-boards-all">
 						All boards ({boards.length})
@@ -67,10 +71,12 @@ export default function Sidebar() {
 				</div>
 				<div className="sidebar-bottom">
 					<ThemeChanger />
-					<div className="sidebar-hide-button" onClick={changeVisibility}>
-						<FontAwesomeIcon icon={faEyeSlash} />
-						<span>Hide Sidebar</span>
-					</div>
+					{isDesktop && (
+						<div className="sidebar-hide-button" onClick={changeVisibility}>
+							<FontAwesomeIcon icon={faEyeSlash} />
+							<span>Hide Sidebar</span>
+						</div>
+					)}
 				</div>
 			</div>
 			<PopupWrapper

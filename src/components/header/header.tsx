@@ -6,6 +6,8 @@ import {
 	faBars,
 	faEllipsisVertical,
 	faEye,
+	faAngleDown,
+	faAngleUp,
 } from "@fortawesome/free-solid-svg-icons";
 import type { RootState } from "../../redux/store";
 import PopupWrapper from "../popups/popup-wrapper";
@@ -68,7 +70,7 @@ export default function Header() {
 		}
 	};
 
-	const showSidebar = () => {
+	const changeVisibilityOfSidebar = () => {
 		dispatch(changeSidebarVisibility());
 	};
 
@@ -78,21 +80,48 @@ export default function Header() {
 		closeMenu();
 	};
 
+	const displaySidebarButtons = () => {
+		if (isDesktop && !isSidebarVisible) {
+			return (
+				<div
+					className="header-show-sidebar-button"
+					onClick={changeVisibilityOfSidebar}>
+					<FontAwesomeIcon icon={faEye} />
+					<span>Show Sidebar</span>
+				</div>
+			);
+		}
+		if (!isDesktop) {
+			return isSidebarVisible ? (
+				<div className="header-arrow-buttons">
+					<FontAwesomeIcon
+						icon={faAngleUp}
+						size="lg"
+						onClick={changeVisibilityOfSidebar}
+					/>
+				</div>
+			) : (
+				<div className="header-arrow-buttons">
+					<FontAwesomeIcon
+						icon={faAngleDown}
+						size="lg"
+						onClick={changeVisibilityOfSidebar}
+					/>
+				</div>
+			);
+		}
+	};
+
 	return (
 		<>
 			<header className="header">
 				<h2 className="heading header-board-title">
-					{!isSidebarVisible && (
+					{(!isSidebarVisible || !isDesktop) && (
 						<FontAwesomeIcon icon={faBars} flip="vertical" size="lg" />
 					)}
 					<span>{board?.title}</span>
 				</h2>
-				{!isSidebarVisible && isDesktop && (
-					<div className="header-show-sidebar-button" onClick={showSidebar}>
-						<FontAwesomeIcon icon={faEye} />
-						<span>Show Sidebar</span>
-					</div>
-				)}
+				{displaySidebarButtons()}
 				<div className="header-buttons">
 					<button className="header-new-task" onClick={openNewTaskPopup}>
 						<FontAwesomeIcon icon={faPlus} />
