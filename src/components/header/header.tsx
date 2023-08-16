@@ -5,11 +5,13 @@ import {
 	faPlus,
 	faBars,
 	faEllipsisVertical,
+	faEye,
 } from "@fortawesome/free-solid-svg-icons";
 import type { RootState } from "../../redux/store";
 import PopupWrapper from "../popups/popup-wrapper";
 import HandleTaskPopup from "../popups/handleTask/handle-task-popup";
 import {
+	changeSidebarVisibility,
 	deleteBoard,
 	setBoardEditMode,
 	setBoardPopupVisibility,
@@ -18,6 +20,7 @@ import {
 } from "../../redux/appReducer";
 import DropDownMenu from "../drop-down-menu/drop-down-menu";
 import useConfirm from "../../hooks/use-confirm";
+import useDisplaySize from "../../hooks/use-display-size";
 
 import "./header.scss";
 
@@ -38,6 +41,7 @@ export default function Header() {
 		"Delete confirmation",
 		`Are you sure you want to delete board ${board?.title} and all its content?`
 	);
+	const isDesktop = useDisplaySize();
 
 	const openNewTaskPopup = () => {
 		dispatch(setTaskPopupVisibility(true));
@@ -64,6 +68,10 @@ export default function Header() {
 		}
 	};
 
+	const showSidebar = () => {
+		dispatch(changeSidebarVisibility());
+	};
+
 	const handleEdit = () => {
 		dispatch(setBoardPopupVisibility(true));
 		dispatch(setBoardEditMode(true));
@@ -79,6 +87,12 @@ export default function Header() {
 					)}
 					<span>{board?.title}</span>
 				</h2>
+				{!isSidebarVisible && isDesktop && (
+					<div className="header-show-sidebar-button" onClick={showSidebar}>
+						<FontAwesomeIcon icon={faEye} />
+						<span>Show Sidebar</span>
+					</div>
+				)}
 				<div className="header-buttons">
 					<button className="header-new-task" onClick={openNewTaskPopup}>
 						<FontAwesomeIcon icon={faPlus} />
