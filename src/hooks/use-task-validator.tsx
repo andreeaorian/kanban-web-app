@@ -17,9 +17,11 @@ export default function useTaskValidation() {
 		if (isEmpty(task.title)) {
 			errors.taskTitle = "Title is required";
 		} else {
-			const tasksNames = allTaskFromBoard!.map((x: Task) => x.title);
+			const taskWithSameName = allTaskFromBoard!.find(
+				(x) => x.title === task.title
+			);
 
-			if (tasksNames.includes(task.title)) {
+			if (!!taskWithSameName && taskWithSameName.id !== task.id) {
 				errors.taskTitle = "The title should be unique";
 			}
 		}

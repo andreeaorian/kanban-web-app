@@ -1,0 +1,131 @@
+@import "../../../assets/variables.scss";
+
+.title {
+	display: flex;
+	flex-direction: row;
+	justify-content: space-between;
+	align-items: center;
+
+	svg {
+		cursor: pointer;
+	}
+}
+
+.description {
+	color: $gray;
+	font-weight: 600;
+	line-height: 1.6;
+}
+
+.subtask {
+	display: flex;
+	gap: 0.5rem;
+	align-items: center;
+	font-weight: 600;
+	padding: 0.5rem 0.25rem;
+	border-radius: 0.25rem;
+
+	.subtask-checkbox {
+		appearance: none;
+		position: relative;
+		cursor: pointer;
+
+		&::before,
+		&:checked::before {
+			top: 0;
+			left: 0;
+		}
+
+		&::before {
+			content: "";
+			display: block;
+			position: absolute;
+			border: 0.063rem solid;
+			border-radius: 0.125rem;
+		}
+
+		&:checked::before {
+			content: "";
+			display: block;
+			position: absolute;
+			border: 0.063rem solid;
+		}
+
+		&:checked::after {
+			content: "";
+			border: solid $white;
+			display: block;
+			position: absolute;
+			-webkit-transform: rotate(45deg);
+			-ms-transform: rotate(45deg);
+			transform: rotate(45deg);
+			top: 0.1rem;
+			left: 0.35rem;
+			width: 0.3rem;
+			height: 0.6rem;
+			border-width: 0 0.125rem 0.125rem 0;
+		}
+	}
+
+	.subtask-checkbox,
+	.subtask-checkbox::before,
+	.subtask-checkbox:checked::before {
+		width: 1rem;
+		height: 1rem;
+	}
+}
+
+.subtask.done {
+	color: $gray;
+	text-decoration: line-through;
+}
+
+.dark-theme {
+	.title {
+		svg {
+			color: $gray;
+		}
+	}
+
+	.subtask {
+		border-color: $dark_background;
+		background: $dark_background;
+
+		.subtask-checkbox {
+			&::before {
+				border-color: $gray;
+				background-color: $dark_gray;
+			}
+
+			&:checked::before {
+				border-color: $purplish_blue;
+				background-color: $purplish_blue;
+			}
+		}
+	}
+}
+
+.light-theme {
+	.title {
+		svg {
+			color: $black;
+		}
+	}
+
+	.subtask {
+		border-color: $light_background;
+		background: $light_background;
+
+		.subtask-checkbox {
+			&::before {
+				border-color: $gray;
+				background-color: $white;
+			}
+
+			&:checked::before {
+				border-color: $purplish_blue;
+				background-color: $purplish_blue;
+			}
+		}
+	}
+}

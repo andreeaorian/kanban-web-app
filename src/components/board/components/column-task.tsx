@@ -1,7 +1,11 @@
 import { useDrag, DragSourceMonitor } from "react-dnd";
 import { useDispatch } from "react-redux";
 import { SubTaskStatus, Task } from "../../../models";
-import { changeTaskStatus } from "../../../redux/appReducer";
+import {
+	changeTaskStatus,
+	setSelectedTask,
+	setTaskViewMode,
+} from "../../../redux/appReducer";
 import { DraggableItemTypes } from "../../../utils/draggable-constants";
 
 export default function ColumnTask(task: Task) {
@@ -24,10 +28,19 @@ export default function ColumnTask(task: Task) {
 		(x) => x.status === SubTaskStatus.Done
 	).length;
 
+	const viewTask = () => {
+		dispatch(setTaskViewMode(true));
+		dispatch(setSelectedTask(task));
+	};
+
 	return (
-		<div ref={drag} className="column-task" style={{ opacity }}>
-			<div className="column-task-title">{task.title}</div>
-			<div className="column-task-info">{`${doneSubtasks} of ${task.subtasks.length} subtasks`}</div>
-		</div>
+		<>
+			<div ref={drag} className="column-task" style={{ opacity }}>
+				<div className="column-task-title" onClick={viewTask}>
+					{task.title}
+				</div>
+				<div className="column-task-info">{`${doneSubtasks} of ${task.subtasks.length} subtasks`}</div>
+			</div>
+		</>
 	);
 }

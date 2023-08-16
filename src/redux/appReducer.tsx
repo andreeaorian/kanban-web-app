@@ -1,15 +1,17 @@
 import { createSlice } from "@reduxjs/toolkit";
 import type { PayloadAction } from "@reduxjs/toolkit";
-import { Board, Task, SubTaskStatus } from "../models";
+import { Board, Task, SubTaskStatus, SubTask } from "../models";
 
 export interface App {
 	isDarkTheme: boolean;
 	isBoardPopupVisible: boolean;
 	isBoardInEdit: boolean;
-	isNewTaskPopupVisible: boolean;
-	isBoardMenuVisible: boolean;
+	isTaskInEdit: boolean;
+	isTaskPopupVisible: boolean;
+	isTaskViewModeOpen: boolean;
 	showSidebar: boolean;
 	boards: Board[];
+	selectedTask: Task | null;
 }
 
 const initialState: App = {
@@ -17,8 +19,9 @@ const initialState: App = {
 	showSidebar: true,
 	isBoardPopupVisible: false,
 	isBoardInEdit: false,
-	isNewTaskPopupVisible: false,
-	isBoardMenuVisible: false,
+	isTaskInEdit: false,
+	isTaskPopupVisible: false,
+	isTaskViewModeOpen: false,
 	boards: [
 		{
 			id: "2sD4f9jKpR",
@@ -46,8 +49,14 @@ const initialState: App = {
 					status: "TO DO",
 					subtasks: [
 						{
+							id: "6Yp123nLrJ",
 							title: "This is the first subtask",
 							status: SubTaskStatus.Todo,
+						},
+						{
+							id: "754123nLrJ",
+							title: "This is the second very very loooooong subtask - done",
+							status: SubTaskStatus.Done,
 						},
 					],
 				},
@@ -62,6 +71,7 @@ const initialState: App = {
 			isSelected: false,
 		},
 	],
+	selectedTask: null,
 };
 
 export const appSlice = createSlice({
@@ -80,6 +90,21 @@ export const appSlice = createSlice({
 					board.title = action.payload.title;
 					board.columns = action.payload.columns;
 					return;
+				}
+			});
+		},
+		editTask: (state, action: PayloadAction<Task>) => {
+			state.boards.forEach((board) => {
+				if (board.id === action.payload.boardId) {
+					board.tasks.forEach((task) => {
+						if (task.id === action.payload.id) {
+							task.title = action.payload.title;
+							task.description = action.payload.description;
+							task.status = action.payload.status;
+							task.subtasks = [...action.payload.subtasks];
+							return;
+						}
+					});
 				}
 			});
 		},
@@ -103,12 +128,49 @@ export const appSlice = createSlice({
 				}
 			});
 		},
+		deleteTask: (state, action: PayloadAction<Task>) => {
+			state.boards.forEach((board) => {
+				if (board.id === action.payload.boardId) {
+					board.tasks = board.tasks?.filter((t) => t.id !== action.payload.id);
+				}
+			});
+
+			if (state.selectedTask?.id === action.payload.id) {
+				state.selectedTask = null;
+			}
+		},
 		changeTaskStatus: (state, action: PayloadAction<Task>) => {
 			state.boards.forEach((board) => {
 				if (board.id === action.payload.boardId) {
 					board.tasks.forEach((task) => {
-						if (task.title === action.payload.title) {
+						if (task.id === action.payload.id) {
 							task.status = action.payload.status;
+
+							if (state.selectedTask?.id === task.id) {
+								state.selectedTask = task;
+							}
+						}
+					});
+				}
+			});
+		},
+		changeSubtaskStatus: (
+			state,
+			action: PayloadAction<{ taskId: string; subtask: SubTask }>
+		) => {
+			state.boards.forEach((board) => {
+				if (board.isSelected) {
+					board.tasks.forEach((task) => {
+						if (task.id === action.payload.taskId) {
+							task.subtasks.forEach((subtask) => {
+								if (subtask.id === action.payload.subtask.id) {
+									subtask.status = action.payload.subtask.status;
+								}
+							});
+
+							if (state.selectedTask?.id === task.id) {
+								state.selectedTask = task;
+							}
 						}
 					});
 				}
@@ -117,17 +179,23 @@ export const appSlice = createSlice({
 		changeSidebarVisibility: (state) => {
 			state.showSidebar = !state.showSidebar;
 		},
-		changeBoardMenuVisibility: (state) => {
-			state.isBoardMenuVisible = !state.isBoardMenuVisible;
-		},
 		setBoardPopupVisibility: (state, action: PayloadAction<boolean>) => {
 			state.isBoardPopupVisible = action.payload;
 		},
 		setBoardEditMode: (state, action: PayloadAction<boolean>) => {
 			state.isBoardInEdit = action.payload;
 		},
-		setNewTaskPopupVisibility: (state, action: PayloadAction<boolean>) => {
-			state.isNewTaskPopupVisible = action.payload;
+		setTaskEditMode: (state, action: PayloadAction<boolean>) => {
+			state.isTaskInEdit = action.payload;
+		},
+		setTaskPopupVisibility: (state, action: PayloadAction<boolean>) => {
+			state.isTaskPopupVisible = action.payload;
+		},
+		setTaskViewMode: (state, action: PayloadAction<boolean>) => {
+			state.isTaskViewModeOpen = action.payload;
+		},
+		setSelectedTask: (state, action: PayloadAction<Task>) => {
+			state.selectedTask = action.payload;
 		},
 	},
 });
@@ -137,15 +205,20 @@ export const {
 	changeTheme,
 	addBoard,
 	editBoard,
+	editTask,
 	selectBoard,
 	addTaskToBoard,
+	deleteTask,
 	deleteBoard,
 	changeTaskStatus,
+	changeSubtaskStatus,
 	changeSidebarVisibility,
-	changeBoardMenuVisibility,
 	setBoardPopupVisibility,
 	setBoardEditMode,
-	setNewTaskPopupVisibility,
+	setTaskEditMode,
+	setTaskPopupVisibility,
+	setTaskViewMode,
+	setSelectedTask,
 } = appSlice.actions;
 
 export default appSlice.reducer;

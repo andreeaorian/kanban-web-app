@@ -14,7 +14,7 @@ interface PopupListActionableValueProps {
 	title: string;
 	hasColor: boolean;
 	deleteHandler: (title: string) => void;
-	editHandler?: (id: string) => void;
+	editHandler: (id: string) => void;
 	color?: string;
 	index?: number;
 	moveListValueHandler?: (dragIndex: number, hoverIndex: number) => void;

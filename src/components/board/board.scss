@@ -37,6 +37,11 @@
 					.column-task-title {
 						font-size: 1rem;
 						font-weight: bold;
+
+						&:hover {
+							cursor: pointer;
+							text-decoration: underline;
+						}
 					}
 
 					.column-task-info {
