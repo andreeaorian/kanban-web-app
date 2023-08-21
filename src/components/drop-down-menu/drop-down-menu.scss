@@ -2,7 +2,6 @@
 
 .dropdown-menu {
 	position: absolute;
-	right: 1rem;
 	top: 4rem;
 	z-index: 9999;
 	padding: 0.25rem 0;
@@ -48,5 +47,26 @@
 		li:hover {
 			background-color: rgba(101, 94, 198, 0.3);
 		}
+	}
+}
+
+@media screen and (min-width: 1024px) {
+	//Desktop
+	.dropdown-menu {
+		right: 1rem;
+	}
+}
+
+@media screen and (min-width: 768px) and (max-width: 1023px) {
+	//Tablet
+	.dropdown-menu {
+		right: 0;
+	}
+}
+
+@media screen and (max-width: 767px) {
+	//Mobile
+	.dropdown-menu {
+		right: 0;
 	}
 }
