@@ -101,6 +101,10 @@
 	}
 }
 
+.sidebar.hidden {
+	display: none;
+}
+
 .dark-theme {
 	.sidebar {
 		background-color: $dark_gray;
@@ -117,10 +121,6 @@
 			}
 		}
 	}
-}
-
-.sidebar.hidden {
-	display: none;
 }
 
 .light-theme {
